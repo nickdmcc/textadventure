@@ -1,2 +1,2 @@
 # textadventure
-tutorial for making c++ text RPG
+tutorial for making java text RPG
