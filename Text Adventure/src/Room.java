@@ -1,5 +1,6 @@
 
 public class Room {
+	static private int MAX_LOOKS = 3;
 	
 	private String currentRoom;
 	private String roomDescription;
@@ -7,6 +8,8 @@ public class Room {
 	private String roomSouth;
 	private String roomEast;
 	private String roomWest;
+	private String strLookDescription;
+	private String[] strLookArray = new String[MAX_LOOKS];
 	
 	public String getCurrentRoom() {
 		return currentRoom;
@@ -54,6 +57,22 @@ public class Room {
 
 	public void setRoomWest(String roomWest) {
 		this.roomWest = roomWest;
+	}
+
+	public String getStrLookDescription() {
+		return strLookDescription;
+	}
+
+	public void setStrLookDescription(String strLookDescription) {
+		this.strLookDescription = strLookDescription;
+	}
+
+	public String[] getStrLookArray() {
+		return strLookArray;
+	}
+
+	public void setStrLookArray(String[] strLookArray) {
+		this.strLookArray = strLookArray;
 	}
 
 }
