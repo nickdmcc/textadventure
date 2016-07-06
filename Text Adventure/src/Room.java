@@ -1,6 +1,5 @@
 
 public class Room {
-	static private int MAX_LOOKS = 3;
 	
 	private String currentRoom;
 	private String roomDescription;
@@ -9,7 +8,7 @@ public class Room {
 	private String roomEast;
 	private String roomWest;
 	private String strLookDescription;
-	private String[] strLookArray = new String[MAX_LOOKS];
+	private String[] strLookArray = new String[Constants.MAX_LOOKS];
 	
 	public String getCurrentRoom() {
 		return currentRoom;
