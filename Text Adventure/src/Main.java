@@ -1,13 +1,13 @@
 import javax.swing.*;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.FileReader;
 import java.util.Scanner;
 import java.awt.event.*;
 
+@SuppressWarnings("serial")
 public class Main extends JFrame{
 
 	static private String FILE = "World.txt";
@@ -18,11 +18,12 @@ public class Main extends JFrame{
 	JButton button2;
 	JButton button3;
 	JButton button4;
+	ButtonGroup directionGroup;
 	static JLabel label1;
 	static JTextArea textArea1;
 	
 	/**
-	 * Shows the room description after typing "look" or when entering a new room
+	 * Shows the room description when entering a new room
 	 * @param room
 	 */
 	public static void displayRoom(Room room)
@@ -30,6 +31,11 @@ public class Main extends JFrame{
 		textArea1.setText(room.getRoomDescription());
 	}
 
+	/**
+	 * Stores all room info into appropriate fields.  For instance, stores room in North direction, stores room in South direction.. etc.
+	 * @param file
+	 * @param room
+	 */
 	public static void getRoomInfo(String file, Room room)
 	{
 		String strRoom = "<" + room.getCurrentRoom() + ">";
@@ -38,11 +44,14 @@ public class Main extends JFrame{
 		try{
 		    Scanner s = new Scanner(new FileReader(file));
 		    String strLine;
+		    
 		    //Read File Line By Line
 		    while ((strLine = s.nextLine()) != null)   {
 		      if (strLine.equals(strRoom))
 		      {
 		    	  boolean stop = false;
+		    	  
+		    	  //Stores string for description of room
 		    	  while (!stop)
 		    	  {
 		    		  strLine = s.nextLine();
@@ -63,7 +72,6 @@ public class Main extends JFrame{
 		    		  tempString += "\n";
 		    	  }
 		    	  
-		    	  
 		    	  room.setRoomDescription(tempString);
 		    	  s.next();
 		    	  room.setRoomNorth(s.next());
@@ -74,9 +82,18 @@ public class Main extends JFrame{
 		    	  s.next();
 		    	  room.setRoomWest(s.next());
 		    	  s.close();
+		    	  
+		    	  //Checks if it is end of the game.
+		    	  if ((room.getRoomEast().equals("None") && room.getRoomNorth().equals("None") && room.getRoomSouth().equals("None") && room.getRoomWest().equals("None")))
+		  			{
+		  				label1.setText("Game Over");
+		  			}
+		    	  
 		    	  return;
 		      }
+		      
 		    }
+		    
 		    //Close the input stream
 		    s.close();
 		    }catch (Exception e){//Catch exception if any
@@ -84,6 +101,12 @@ public class Main extends JFrame{
 		    }
 	}
 	
+	/**
+	 * Updates label component if it is end game or if there is a place you cannot move to.
+	 * Else it updates the current room you are in and displays room description.
+	 * @param room
+	 * @param strRoom
+	 */
 	public static void move(Room room, String strRoom)
 	{
 		if ((room.getRoomEast().equals("None") && room.getRoomNorth().equals("None") && room.getRoomSouth().equals("None") && room.getRoomWest().equals("None")))
@@ -107,75 +130,95 @@ public class Main extends JFrame{
 		displayRoom(room);
 	}
 	
-	public Main()
+	/**
+	 * Creates the game window and all of its components.
+	 */
+	public void createFrame()
 	{
-		this.setSize(600,300);
-
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		
-		Dimension dim = tk.getScreenSize();
-		
-		int xPos = (dim.width / 2) - (this.getWidth() / 2);
-		int yPos = (dim.height / 2) - (this.getHeight() / 2);
-		
-		this.setLocation(xPos, yPos);
-		
+		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setTitle("Escape");
 		
-		this.setTitle("Text Adventure");
+		JPanel thePanel = new JPanel();
 		
-		JPanel textPanel = new JPanel();
-		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.PAGE_AXIS));
+		thePanel.setLayout(new GridBagLayout());
 		
-		textArea1 = new JTextArea();
-		textArea1.setLineWrap(true);
-		textArea1.setWrapStyleWord(true);
+		textArea1 = new JTextArea(20,40);
 		textArea1.setEditable(false);
-		textPanel.add(textArea1);
 		
-		JPanel labelPanel = new JPanel();
-		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.LINE_AXIS));
-		label1 = new JLabel("");
-		labelPanel.add(label1);
+		addComp(thePanel, textArea1, 0, 0, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
+		label1 = new JLabel("Start");
 		
+		addComp(thePanel, label1, 0, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		Box directionBox = Box.createHorizontalBox();
 		button1 = new JButton("North");
 		ListenForButton lForButtonN = new ListenForButton();
-		
 		button1.addActionListener(lForButtonN);
-		buttonPanel.add(button1);
-		
 		button2 = new JButton("East");
 		ListenForButton lForButtonE = new ListenForButton();
-		
 		button2.addActionListener(lForButtonE);
-		buttonPanel.add(button2);
-		
 		button3 = new JButton("South");
 		ListenForButton lForButtonS = new ListenForButton();
-		
 		button3.addActionListener(lForButtonS);
-		buttonPanel.add(button3);
-		
 		button4 = new JButton("West");
 		ListenForButton lForButtonW = new ListenForButton();
-		
 		button4.addActionListener(lForButtonW);
-		buttonPanel.add(button4);
 		
-		Container contentPane = getContentPane();
-		contentPane.add(textPanel, BorderLayout.NORTH);
-		contentPane.add(labelPanel, BorderLayout.CENTER);
-		contentPane.add(buttonPanel, BorderLayout.PAGE_END);
+		directionGroup = new ButtonGroup();
+		directionGroup.add(button1);
+		directionGroup.add(button2);
+		directionGroup.add(button3);
+		directionGroup.add(button4);
+		directionBox.add(button1);
+		directionBox.add(button2);
+		directionBox.add(button3);
+		directionBox.add(button4);
+		directionBox.setBorder(BorderFactory.createTitledBorder("Directions"));
+		addComp(thePanel, directionBox, 0, 2, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+
 		
+		this.add(thePanel);
+		this.pack();
 		this.setVisible(true);
 	}
 	
+	/**
+	 * Makes it easier to add and shift components around.
+	 * @param thePanel
+	 * @param comp
+	 * @param xPos
+	 * @param yPos
+	 * @param compWidth
+	 * @param compHeight
+	 * @param place
+	 * @param stretch
+	 */
+	private void addComp(JPanel thePanel, JComponent comp, int xPos, int yPos, int compWidth, int compHeight, int place, int stretch)
+	{
+		GridBagConstraints gridConstraints = new GridBagConstraints();
+		gridConstraints.gridx = xPos;
+		gridConstraints.gridy = yPos;
+		gridConstraints.gridwidth = compWidth;
+		gridConstraints.gridheight = compHeight;
+		gridConstraints.weightx = 100;
+		gridConstraints.weighty = 100;
+		gridConstraints.insets = new Insets(5,5,5,5);
+		gridConstraints.anchor = place;
+		gridConstraints.fill = stretch;
+
+		thePanel.add(comp, gridConstraints);	
+	}
+	
+	/**
+	 * Start of program
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
-		new Main();
+		Main game = new Main();
+		game.createFrame();
 		try{
 			Scanner scan = new Scanner(new FileReader(FILE));
 			scan.next();
@@ -189,6 +232,11 @@ public class Main extends JFrame{
 		
 	}
 	
+	/**
+	 * Private class for when a button is clicked.
+	 * @author Soysauce
+	 *
+	 */
 	private class ListenForButton implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
