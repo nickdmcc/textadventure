@@ -167,20 +167,87 @@ public class Main{
 		    }
 	}
 	
+	public void getMonsterInfo(String file, Room room, String strMonster)
+	{
+		String strMonsterRoom = "<" + room.getCurrentRoom() + "|" + strMonster + ">";
+		String tempString = "";
+		try{
+			Scanner s = new Scanner(new FileReader(file));
+			String strLine = "";
+			
+			while ((strLine = s.nextLine()) != null)
+			{
+				if (strLine.equals(strMonsterRoom))
+				{
+					boolean stop = false;
+					int data = 0;
+					data = s.nextInt();
+					Constants.MONSTER.setHealth(data);
+					data = s.nextInt();
+					Constants.MONSTER.setDamage(data);
+					
+					while (!stop)
+					{
+						strLine = s.nextLine();
+				    	String[] pieces = strLine.split("\\s+");
+				   		for (int i = 0; i < pieces.length; i++)
+				   		{
+				   			if (pieces[i].equals("*"))
+				   			{
+			    				stop = true;
+			    				break;
+			    			}
+			    			  
+				    		else
+				    		{
+				    			tempString += pieces[i] + " ";
+				    		}
+				   		}
+				    		
+				   		tempString += "\n";
+					}	
+					
+					Constants.MONSTER.setAttackMessage(tempString);
+		    		s.close();
+		    		return;
+				}
+				
+				}
+				
+			s.close();
+			}catch (Exception e){//Catch exception if any
+		      System.err.println("Error: " + e.getMessage());
+		    }
+	}
+	
 	/**
 	 * Start of program
 	 * @param args
 	 */
 	public static void main(String[] args)
 	{
+		String tempString = "";
+		int data = 0;
 		
 		try{
-			Scanner scan = new Scanner(new FileReader(Constants.FILE));
-			scan.next();
-			Constants.ROOM.setCurrentRoom(scan.next());
+			Scanner s = new Scanner(new FileReader(Constants.FILE));
+			s.next();
+			tempString = s.next();
+			Constants.PLAYER.setName(tempString);
+			s.next();
+			data = s.nextInt();
+			Constants.PLAYER.setHealth(data);
+			s.next();
+			tempString = s.next();
+			Constants.PLAYER.setWeapon(tempString);
+			s.next();
+			data = s.nextInt();
+			Constants.PLAYER.setDamage(data);
+			s.next();
+			Constants.ROOM.setCurrentRoom(s.next());
 			Constants.GAME.getRoomInfo(Constants.FILE, Constants.ROOM, Constants.WINDOW);
 			Constants.WINDOW.displayRoom(Constants.ROOM);
-			scan.close();
+			s.close();
 		}catch (Exception e){//Catch exception if any
 		      System.err.println("Error: " + e.getMessage());
 		}

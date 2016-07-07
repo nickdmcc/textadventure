@@ -1,4 +1,8 @@
-<Start> Middle
+<Name>   Troy
+<health> 275 
+<weapon> dagger
+<damage> 21
+<Start>  Middle
 
 <Middle>
 You step into a house where you are nearly
@@ -11,6 +15,7 @@ There is a door in every direction. *
 <south> Bottom
 <west>  Left
 <look>  1 window
+<enemy> None
 
 <Middle|window>
 The light pierces your eyes, causing you to wince in pain each time you look directly at the window. *
@@ -24,6 +29,7 @@ There is only one door to the east where you came. *
 <south> None
 <west>  None
 <look>  1 fountain
+<enemy> None
 
 <Left|fountain>
 A beautiful fountain stands erected in the middle of the room.  It kinda makes you thirsty. *
@@ -38,6 +44,7 @@ Your only option is to go back inside and get them out of here! *
 <south> None
 <west>  None
 <look>  0
+<enemy> None
 
 <Right>
 As you pass through the door you feel a chill run
@@ -49,9 +56,15 @@ There is no where to go but back to the west. *
 <south> None
 <west>  Middle
 <look>  1 something
+<enemy> goblin
 
 <Right|something>
 You squint your eyes towards the corner where the mysterious entity resides...  Nothing moves. *
+
+<Right|goblin>
+<Health> 125
+<Damage> 12
+The goblin claws your face. *
 
 <Top>
 As you get closer to the second story of the mansion, the sounds of someone
@@ -62,6 +75,7 @@ One door is to the south and one is to the north up a [stairwell]. *
 <south> Middle
 <west>  None
 <look>  1 stairwell
+<enemy> None
 
 <Top|stairwell>
 This is the only place where your friend could be.  You'd best go up it, carefully. *
@@ -78,9 +92,15 @@ corner, feathered by darkness.   To be continued... *
 <south> None
 <west>  None
 <look>  2 friend chair
+<enemy> troll
 
 <End|friend>
 Your friend seems to be pleading with you in the chair to run.  You have never seen them that scared before. *
 
 <End|chair>
 The wooden chair holds your friend tightly, with ropes seemingly strangling the body that is tied to it. *
+
+<End|troll>
+<Health> 202
+<Damage> 19
+The troll bashes your side with his club. *

@@ -28,13 +28,17 @@ public class GameWindow extends JFrame{
 	JButton button6;
 	JButton button7;
 	JButton button8;
+	JButton button9;
 	ButtonGroup directionGroup = new ButtonGroup();
+	ButtonGroup actionGroup = new ButtonGroup();
 	ButtonGroup itemGroup = new ButtonGroup();
 	Box directionBox;
+	Box actionBox;
 	Box itemBox;
 	static JLabel label1;
 	static JTextArea textArea1;
 	static JTextArea textArea2 = new JTextArea();
+	static JTextArea textArea3 = new JTextArea();
 	
 	/**
 	 * Creates the game window and all of its components.
@@ -72,19 +76,28 @@ public class GameWindow extends JFrame{
 		button5 = new JButton("View");
 		ListenForButton lForButtonV = new ListenForButton();
 		button5.addActionListener(lForButtonV);
+		button9 = new JButton("Status");
+		ListenForButton lForButtonSt = new ListenForButton();
+		button9.addActionListener(lForButtonSt);
 
 		directionGroup.add(button1);
 		directionGroup.add(button2);
 		directionGroup.add(button3);
 		directionGroup.add(button4);
-		directionGroup.add(button5);
 		directionBox.add(button1);
 		directionBox.add(button2);
 		directionBox.add(button3);
 		directionBox.add(button4);
-		directionBox.add(button5);
 		directionBox.setBorder(BorderFactory.createTitledBorder("Directions"));
 		addComp(thePanel, directionBox, 0, 3, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		actionBox = Box.createHorizontalBox();
+		actionGroup.add(button5);
+		actionGroup.add(button9);
+		actionBox.add(button5);
+		actionBox.add(button9);
+		actionBox.setBorder(BorderFactory.createTitledBorder("Actions"));
+		addComp(thePanel, actionBox, 0, 4, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 
 		
 		this.add(thePanel);
@@ -204,12 +217,13 @@ public class GameWindow extends JFrame{
 		}
 	}
 	
-	public void removeDisplayLook()
+	/**
+	 * Shows the room description when entering a new room
+	 * @param room
+	 */
+	public void displayRoom(Room room)
 	{
-		if (textArea2.getParent() != null)
-		{
-			thePanel.remove(textArea2);
-		}
+		textArea1.setText(room.getRoomDescription());
 	}
 	
 	
@@ -222,13 +236,31 @@ public class GameWindow extends JFrame{
 		thePanel.updateUI();
 	}
 	
-	/**
-	 * Shows the room description when entering a new room
-	 * @param room
-	 */
-	public void displayRoom(Room room)
+	public void removeDisplayLook()
 	{
-		textArea1.setText(room.getRoomDescription());
+		if (textArea2.getParent() != null)
+		{
+			thePanel.remove(textArea2);
+		}
+	}
+	
+	public void displayStatus()
+	{
+		String strPlayer = "Name: " + Constants.PLAYER.getName() + "\n" +  "Health: " + Constants.PLAYER.getHealth() + "\n\n" +
+					"Weapon: " + Constants.PLAYER.getWeapon() + "\n" + "Damage: " + Constants.PLAYER.getDamage() + "\n";
+		textArea2.setText(strPlayer);
+		textArea2.setEditable(false);
+		
+		addComp(thePanel, textArea2, 1, 0, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		thePanel.updateUI();
+	}
+	
+	public void removeDisplayStatus()
+	{
+		if (textArea3.getParent() != null)
+		{
+			thePanel.remove(textArea3);
+		}
 	}
 	
 	/**
@@ -291,6 +323,10 @@ public class GameWindow extends JFrame{
 			{
 				removeDisplayLook();
 				Constants.GAME.getLookInfo(Constants.FILE, Constants.ROOM, button8.getText());
+			}
+			else if (e.getSource() == button9)
+			{
+				Constants.WINDOW.displayStatus();
 			}
 			else
 			{
