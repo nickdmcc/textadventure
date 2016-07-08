@@ -18,6 +18,8 @@ import javax.swing.JTextArea;
 @SuppressWarnings("serial")
 public class GameWindow extends JFrame{
 	
+	public Monster monster = new Monster();
+	
 	static JPanel thePanel = new JPanel();
 	static JPanel monsterPanel = new JPanel();
 	
@@ -273,34 +275,38 @@ public class GameWindow extends JFrame{
 		}
 	}
 	
-	public void checkMonster()
+	public void checkMonster(Monster monster)
 	{
-		if (Constants.ROOM.isMonsterInRoom())
+		if (monster != null)
 		{
-			thePanel.setVisible(false);
-			monsterPanel.setVisible(true);
-			attackMonster();
+			if (monster.isMonsterInRoom())
+			{
+				thePanel.setVisible(false);
+				monsterPanel.setVisible(true);
+				attackMonster(monster);
+			}
+			
+			else
+			{
+				this.remove(monsterPanel);
+				thePanel.setVisible(true);
+			}
 		}
 		
-		else
-		{
-			monsterPanel.setVisible(false);
-			thePanel.setVisible(true);
-		}
 	}
 	
-	public void attackMonster()
+	public void attackMonster(Monster monster)
 	{	
 		this.add(monsterPanel);
-		textArea4.append("Oh no! A " + Constants.MONSTER.getName() + " has appeared!\n\n");
-		while(Constants.ROOM.isMonsterInRoom())
+		textArea4.append("Oh no! A " + monster.getName() + " has appeared!\n\n");
+		while(monster.isMonsterInRoom())
 		{
 			textArea4.append(Constants.PLAYER.getName() + " attacks with a " + Constants.PLAYER.getWeapon() + "\n");
-			Constants.MONSTER.setHealth(Constants.MONSTER.getHealth() - Constants.PLAYER.getDamage());
-			if (Constants.MONSTER.getHealth() < 0)
+			monster.setHealth(monster.getHealth() - Constants.PLAYER.getDamage());
+			if (monster.getHealth() < 0)
 			{
-				textArea4.append("\nThe " + Constants.MONSTER.getName() + " has been killed.");
-				Constants.ROOM.setMonsterInRoom(false);
+				textArea4.append("\nThe " + monster.getName() + " has been killed.");
+				monster.setMonsterInRoom(false);
 				buttonOK = new JButton("OK");
 				ListenForButton lForButtonOK = new ListenForButton();
 				buttonOK.addActionListener(lForButtonOK);
@@ -309,16 +315,27 @@ public class GameWindow extends JFrame{
 			}
 			else
 			{
-				textArea4.append(Constants.MONSTER.getAttackMessage() + "\n");
-				Constants.PLAYER.setHealth(Constants.PLAYER.getHealth() - Constants.MONSTER.getDamage());
+				textArea4.append(monster.getAttackMessage() + "\n");
+				Constants.PLAYER.setHealth(Constants.PLAYER.getHealth() - monster.getDamage());
 				if (Constants.PLAYER.getHealth() < 0)
 				{
 					textArea4.append("\n\nYou are dead.");
 					break;
 				}
 			}
+
 		}
 		
+	}
+	
+	public void setMonster(Monster monster)
+	{
+		this.monster = monster;
+	}
+	
+	public Monster getMonster()
+	{
+		return monster;
 	}
 	
 	/**
@@ -328,6 +345,7 @@ public class GameWindow extends JFrame{
 	 */
 	private class ListenForButton implements ActionListener
 	{
+		
 		public void actionPerformed(ActionEvent e)
 		{
 			if (e.getSource() == button1)
@@ -390,7 +408,7 @@ public class GameWindow extends JFrame{
 			{
 				monsterPanel.remove(buttonOK);
 				textArea4.setText("");
-				checkMonster();
+				checkMonster(monster);
 			}
 			else
 			{

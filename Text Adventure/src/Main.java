@@ -3,6 +3,8 @@ import java.util.Scanner;
 
 public class Main{
 	public String labelText = "";
+	public Monster[] monster = new Monster[Constants.NUM_OF_MONSTERS];
+	int k = 0;
 	
 	/**
 	 * Updates label component if it is end game or if there is a place you cannot move to.
@@ -34,7 +36,8 @@ public class Main{
 		
 		getRoomInfo(Constants.FILE, Constants.ROOM, window);
 		Constants.WINDOW.displayRoom(room);
-		Constants.WINDOW.checkMonster();
+		Constants.WINDOW.setMonster(monster[k]);
+		Constants.WINDOW.checkMonster(monster[k]);
 	}
 
 	/**
@@ -102,14 +105,8 @@ public class Main{
 		    	  s.next();
 		    	  strMonster = s.next();
 		    	  
-		    	  if (strMonster.equals("None"))
+		    	  if (!strMonster.equals("None"))
 		    	  {
-		    		  room.setMonsterInRoom(false);
-		    	  }
-		    	  else
-		    	  {
-		    		  room.setMonsterInRoom(true);
-		    		  Constants.MONSTER.setName(strMonster);
 		    		  getMonsterInfo(file, room, strMonster);
 		    	  }
 		    	  
@@ -187,30 +184,45 @@ public class Main{
 	{
 		String strMonsterRoom = "<" + room.getCurrentRoom() + "|" + strMonster + ">";
 		String tempString = "";
+		for (int i = 0; i < monster.length; i++)
+		{
+			if (monster[i] != null && monster[i].getName().equals(strMonster))
+			{
+				return;
+			}
+			else
+			{
+				k = i;
+			}
+		}
 		try{
 			Scanner s = new Scanner(new FileReader(file));
 			String strLine = "";
 			
 			while ((strLine = s.nextLine()) != null)
 			{
+				
 				if (strLine.equals(strMonsterRoom))
 				{
+					monster[k] = new Monster();
+					monster[k].setMonsterInRoom(true);
+		    		monster[k].setName(strMonster);
 					boolean stop = false;
 					int data = 0;
 					s.next();
 					data = s.nextInt();
-					Constants.MONSTER.setHealth(data);
+					monster[k].setHealth(data);
 					s.next();
 					data = s.nextInt();
-					Constants.MONSTER.setDamage(data);
+					monster[k].setDamage(data);
 					
 					while (!stop)
 					{
 						strLine = s.nextLine();
 				    	String[] pieces = strLine.split("\\s+");
-				   		for (int i = 0; i < pieces.length; i++)
+				   		for (int j = 0; j < pieces.length; j++)
 				   		{
-				   			if (pieces[i].equals("*"))
+				   			if (pieces[j].equals("*"))
 				   			{
 			    				stop = true;
 			    				break;
@@ -218,14 +230,14 @@ public class Main{
 			    			  
 				    		else
 				    		{
-				    			tempString += pieces[i] + " ";
+				    			tempString += pieces[j] + " ";
 				    		}
 				   		}
 				    		
 				   		tempString += "\n";
 					}	
 					
-					Constants.MONSTER.setAttackMessage(tempString);
+					monster[k].setAttackMessage(tempString);
 		    		s.close();
 		    		return;
 				}
@@ -238,17 +250,13 @@ public class Main{
 		    }
 	}
 	
-	/**
-	 * Start of program
-	 * @param args
-	 */
-	public static void main(String[] args)
+	public static void getPlayerStats()
 	{
-		String tempString = "";
-		int data = 0;
-		
-		try{
-			Scanner s = new Scanner(new FileReader(Constants.FILE));
+		String tempString;
+		int data;
+		try
+		{
+			Scanner s = new Scanner(new FileReader(Constants.CHAR_FILE));
 			s.next();
 			tempString = s.next();
 			Constants.PLAYER.setName(tempString);
@@ -261,6 +269,23 @@ public class Main{
 			s.next();
 			data = s.nextInt();
 			Constants.PLAYER.setDamage(data);
+			s.close();
+		}catch (Exception e){
+		      System.err.println("Error: " + e.getMessage());
+		}
+		
+	}
+	
+	/**
+	 * Start of program
+	 * @param args
+	 */
+	public static void main(String[] args)
+	{	
+		getPlayerStats();
+		
+		try{
+			Scanner s = new Scanner(new FileReader(Constants.FILE));
 			s.next();
 			Constants.ROOM.setCurrentRoom(s.next());
 			Constants.GAME.getRoomInfo(Constants.FILE, Constants.ROOM, Constants.WINDOW);

@@ -4,6 +4,7 @@ public class Monster {
 	private String attackMessage;
 	private int health;
 	private int damage;
+	private boolean monsterInRoom;
 	
 	public String getName() {
 		return name;
@@ -28,6 +29,12 @@ public class Monster {
 	}
 	public void setDamage(int damage) {
 		this.damage = damage;
+	}
+	public boolean isMonsterInRoom() {
+		return monsterInRoom;
+	}
+	public void setMonsterInRoom(boolean monsterInRoom) {
+		this.monsterInRoom = monsterInRoom;
 	}
 
 }

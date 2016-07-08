@@ -9,8 +9,6 @@ public class Room {
 	private String roomWest;
 	private String strLookDescription;
 	private String[] strLookArray = new String[Constants.MAX_LOOKS];
-	private Monster monster = new Monster();
-	private boolean monsterInRoom;
 	
 	public String getCurrentRoom() {
 		return currentRoom;
@@ -74,22 +72,6 @@ public class Room {
 
 	public void setStrLookArray(String[] strLookArray) {
 		this.strLookArray = strLookArray;
-	}
-
-	public Monster getMonster() {
-		return monster;
-	}
-
-	public void setMonster(Monster monster) {
-		this.monster = monster;
-	}
-
-	public boolean isMonsterInRoom() {
-		return monsterInRoom;
-	}
-
-	public void setMonsterInRoom(boolean monsterInRoom) {
-		this.monsterInRoom = monsterInRoom;
 	}
 
 }
