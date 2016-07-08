@@ -19,6 +19,7 @@ import javax.swing.JTextArea;
 public class GameWindow extends JFrame{
 	
 	static JPanel thePanel = new JPanel();
+	static JPanel monsterPanel = new JPanel();
 	
 	JButton button1;
 	JButton button2;
@@ -29,6 +30,7 @@ public class GameWindow extends JFrame{
 	JButton button7;
 	JButton button8;
 	JButton button9;
+	JButton buttonOK;
 	ButtonGroup directionGroup = new ButtonGroup();
 	ButtonGroup actionGroup = new ButtonGroup();
 	ButtonGroup itemGroup = new ButtonGroup();
@@ -39,26 +41,31 @@ public class GameWindow extends JFrame{
 	static JTextArea textArea1;
 	static JTextArea textArea2 = new JTextArea();
 	static JTextArea textArea3 = new JTextArea();
+	static JTextArea textArea4 = new JTextArea();
 	
 	/**
 	 * Creates the game window and all of its components.
 	 */
 	public GameWindow()
 	{
-		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Escape");
+		this.setSize(750, 750);
 				
+		monsterPanel.setLayout(new GridBagLayout());
+		textArea4.setEditable(false);
+		addComp(monsterPanel, textArea4, 0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
 		thePanel.setLayout(new GridBagLayout());
 		
-		textArea1 = new JTextArea(20,40);
+		textArea1 = new JTextArea();
 		textArea1.setEditable(false);
 		
-		addComp(thePanel, textArea1, 0, 0, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		addComp(thePanel, textArea1, 0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
 		label1 = new JLabel("Start");
 		
-		addComp(thePanel, label1, 0, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		addComp(thePanel, label1, 0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
 		directionBox = Box.createHorizontalBox();
 		button1 = new JButton("North");
@@ -89,7 +96,7 @@ public class GameWindow extends JFrame{
 		directionBox.add(button3);
 		directionBox.add(button4);
 		directionBox.setBorder(BorderFactory.createTitledBorder("Directions"));
-		addComp(thePanel, directionBox, 0, 3, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		addComp(thePanel, directionBox, 0, 3, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
 		actionBox = Box.createHorizontalBox();
 		actionGroup.add(button5);
@@ -97,13 +104,14 @@ public class GameWindow extends JFrame{
 		actionBox.add(button5);
 		actionBox.add(button9);
 		actionBox.setBorder(BorderFactory.createTitledBorder("Actions"));
-		addComp(thePanel, actionBox, 0, 4, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		addComp(thePanel, actionBox, 0, 4, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 
-		
 		this.add(thePanel);
-		this.pack();
+		//this.pack();
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
+	
 	/**
 	 * Makes it easier to add and shift components around.
 	 * @param thePanel
@@ -112,18 +120,20 @@ public class GameWindow extends JFrame{
 	 * @param yPos
 	 * @param compWidth
 	 * @param compHeight
+	 * @param compWeightx
+	 * @param compWeighty
 	 * @param place
 	 * @param stretch
 	 */
-	private static void addComp(JPanel thePanel, JComponent comp, int xPos, int yPos, int compWidth, int compHeight, int place, int stretch)
+	private static void addComp(JPanel thePanel, JComponent comp, int xPos, int yPos, int compWidth, int compHeight, int compWeightx, int compWeighty, int place, int stretch)
 	{
 		GridBagConstraints gridConstraints = new GridBagConstraints();
 		gridConstraints.gridx = xPos;
 		gridConstraints.gridy = yPos;
 		gridConstraints.gridwidth = compWidth;
 		gridConstraints.gridheight = compHeight;
-		gridConstraints.weightx = 100;
-		gridConstraints.weighty = 100;
+		gridConstraints.weightx = compWeightx;
+		gridConstraints.weighty = compWeighty;
 		gridConstraints.insets = new Insets(5,5,5,5);
 		gridConstraints.anchor = place;
 		gridConstraints.fill = stretch;
@@ -170,7 +180,7 @@ public class GameWindow extends JFrame{
 	{
 		if (label1.getParent() == null)
 		{
-			addComp(thePanel, label1, 0, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+			addComp(thePanel, label1, 0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		}
 	}
 	
@@ -212,7 +222,7 @@ public class GameWindow extends JFrame{
 			}
 			
 			itemBox.setBorder(BorderFactory.createTitledBorder("Items"));
-			addComp(thePanel, itemBox, 0, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+			addComp(thePanel, itemBox, 0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 			thePanel.updateUI();
 		}
 	}
@@ -232,7 +242,7 @@ public class GameWindow extends JFrame{
 		textArea2.setText(strLookDescription);
 		textArea2.setEditable(false);
 		
-		addComp(thePanel, textArea2, 0, 2, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		addComp(thePanel, textArea2, 0, 2, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
 		thePanel.updateUI();
 	}
 	
@@ -251,7 +261,7 @@ public class GameWindow extends JFrame{
 		textArea2.setText(strPlayer);
 		textArea2.setEditable(false);
 		
-		addComp(thePanel, textArea2, 1, 0, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		addComp(thePanel, textArea2, 0, 5, 1, 1, 1, 0, GridBagConstraints.SOUTH, GridBagConstraints.NONE);
 		thePanel.updateUI();
 	}
 	
@@ -263,9 +273,57 @@ public class GameWindow extends JFrame{
 		}
 	}
 	
+	public void checkMonster()
+	{
+		if (Constants.ROOM.isMonsterInRoom())
+		{
+			thePanel.setVisible(false);
+			monsterPanel.setVisible(true);
+			attackMonster();
+		}
+		
+		else
+		{
+			monsterPanel.setVisible(false);
+			thePanel.setVisible(true);
+		}
+	}
+	
+	public void attackMonster()
+	{	
+		this.add(monsterPanel);
+		textArea4.append("Oh no! A " + Constants.MONSTER.getName() + " has appeared!\n\n");
+		while(Constants.ROOM.isMonsterInRoom())
+		{
+			textArea4.append(Constants.PLAYER.getName() + " attacks with a " + Constants.PLAYER.getWeapon() + "\n");
+			Constants.MONSTER.setHealth(Constants.MONSTER.getHealth() - Constants.PLAYER.getDamage());
+			if (Constants.MONSTER.getHealth() < 0)
+			{
+				textArea4.append("\nThe " + Constants.MONSTER.getName() + " has been killed.");
+				Constants.ROOM.setMonsterInRoom(false);
+				buttonOK = new JButton("OK");
+				ListenForButton lForButtonOK = new ListenForButton();
+				buttonOK.addActionListener(lForButtonOK);
+				addComp(monsterPanel, buttonOK, 0, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+				monsterPanel.updateUI();
+			}
+			else
+			{
+				textArea4.append(Constants.MONSTER.getAttackMessage() + "\n");
+				Constants.PLAYER.setHealth(Constants.PLAYER.getHealth() - Constants.MONSTER.getDamage());
+				if (Constants.PLAYER.getHealth() < 0)
+				{
+					textArea4.append("\n\nYou are dead.");
+					break;
+				}
+			}
+		}
+		
+	}
+	
 	/**
 	 * Private class for when a button is clicked.
-	 * @author Soysauce
+	 * @author Nicholas McCarty
 	 *
 	 */
 	private class ListenForButton implements ActionListener
@@ -327,6 +385,12 @@ public class GameWindow extends JFrame{
 			else if (e.getSource() == button9)
 			{
 				Constants.WINDOW.displayStatus();
+			}
+			else if (e.getSource() == buttonOK)
+			{
+				monsterPanel.remove(buttonOK);
+				textArea4.setText("");
+				checkMonster();
 			}
 			else
 			{

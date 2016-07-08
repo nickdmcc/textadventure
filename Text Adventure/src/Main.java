@@ -34,6 +34,7 @@ public class Main{
 		
 		getRoomInfo(Constants.FILE, Constants.ROOM, window);
 		Constants.WINDOW.displayRoom(room);
+		Constants.WINDOW.checkMonster();
 	}
 
 	/**
@@ -44,6 +45,7 @@ public class Main{
 	public void getRoomInfo(String file, Room room, GameWindow window)
 	{
 		String strRoom = "<" + room.getCurrentRoom() + ">";
+		String strMonster = "";
 		String tempString = "";
 		int count = 0;
 		int i = 0;
@@ -95,6 +97,20 @@ public class Main{
 		    	  for (i = 0; i < count % Constants.MAX_LOOKS; i++)
 		    	  {
 		    		  lookArray[i] = s.next();
+		    	  }
+		    	  
+		    	  s.next();
+		    	  strMonster = s.next();
+		    	  
+		    	  if (strMonster.equals("None"))
+		    	  {
+		    		  room.setMonsterInRoom(false);
+		    	  }
+		    	  else
+		    	  {
+		    		  room.setMonsterInRoom(true);
+		    		  Constants.MONSTER.setName(strMonster);
+		    		  getMonsterInfo(file, room, strMonster);
 		    	  }
 		    	  
 		    	  room.setStrLookArray(lookArray);
@@ -181,8 +197,10 @@ public class Main{
 				{
 					boolean stop = false;
 					int data = 0;
+					s.next();
 					data = s.nextInt();
 					Constants.MONSTER.setHealth(data);
+					s.next();
 					data = s.nextInt();
 					Constants.MONSTER.setDamage(data);
 					
