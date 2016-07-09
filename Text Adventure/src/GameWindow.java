@@ -22,6 +22,7 @@ public class GameWindow extends JFrame{
 	
 	static JPanel thePanel = new JPanel();
 	static JPanel monsterPanel = new JPanel();
+	static JPanel startPanel = new JPanel();
 	
 	JButton button1;
 	JButton button2;
@@ -32,7 +33,8 @@ public class GameWindow extends JFrame{
 	JButton button7;
 	JButton button8;
 	JButton button9;
-	JButton buttonOK;
+	JButton button10;
+	JButton button11;
 	ButtonGroup directionGroup = new ButtonGroup();
 	ButtonGroup actionGroup = new ButtonGroup();
 	ButtonGroup itemGroup = new ButtonGroup();
@@ -40,6 +42,9 @@ public class GameWindow extends JFrame{
 	Box actionBox;
 	Box itemBox;
 	static JLabel label1;
+	static JLabel label2;
+	static JLabel label3;
+	static JTextArea textName;
 	static JTextArea textArea1;
 	static JTextArea textArea2 = new JTextArea();
 	static JTextArea textArea3 = new JTextArea();
@@ -53,6 +58,21 @@ public class GameWindow extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Escape");
 		this.setSize(750, 750);
+		
+		startPanel.setLayout(new GridBagLayout());
+		label2 = new JLabel("Enter your name: ");
+		addComp(startPanel, label2, 0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		textName = new JTextArea(1, 15);
+		addComp(startPanel, textName, 1, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);	
+		
+		button11 = new JButton("Start!");
+		ListenForButton lForButton11 = new ListenForButton();
+		button11.addActionListener(lForButton11);
+		addComp(startPanel, button11, 2, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		label3 = new JLabel();
+		addComp(startPanel, label3, 1, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 				
 		monsterPanel.setLayout(new GridBagLayout());
 		textArea4.setEditable(false);
@@ -307,10 +327,10 @@ public class GameWindow extends JFrame{
 			{
 				textArea4.append("\nThe " + monster.getName() + " has been killed.");
 				monster.setMonsterInRoom(false);
-				buttonOK = new JButton("OK");
+				button10 = new JButton("OK");
 				ListenForButton lForButtonOK = new ListenForButton();
-				buttonOK.addActionListener(lForButtonOK);
-				addComp(monsterPanel, buttonOK, 0, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+				button10.addActionListener(lForButtonOK);
+				addComp(monsterPanel, button10, 0, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 				monsterPanel.updateUI();
 			}
 			else
@@ -333,9 +353,16 @@ public class GameWindow extends JFrame{
 		this.monster = monster;
 	}
 	
-	public Monster getMonster()
+	public void setPlayerName()
 	{
-		return monster;
+		thePanel.setVisible(false);
+		this.add(startPanel);
+	}
+	
+	public void startGame()
+	{
+		startPanel.setVisible(false);
+		thePanel.setVisible(true);
 	}
 	
 	/**
@@ -404,11 +431,29 @@ public class GameWindow extends JFrame{
 			{
 				Constants.WINDOW.displayStatus();
 			}
-			else if (e.getSource() == buttonOK)
+			else if (e.getSource() == button10)
 			{
-				monsterPanel.remove(buttonOK);
+				monsterPanel.remove(button10);
 				textArea4.setText("");
 				checkMonster(monster);
+			}
+			else if (e.getSource() == button11)
+			{
+				if (textName.getText().equals(""))
+				{
+					label3.setText("You did not enter a name.");
+				}
+				else
+				{
+					for(int i = 0; i < textName.getText().length(); i++){
+				            if(Character.isWhitespace(textName.getText().charAt(i))){
+				                label3.setText("Your name should not have a space in it");
+				                return;
+				            }
+				        }
+					Constants.PLAYER.setName(textName.getText());
+					startGame();
+				}
 			}
 			else
 			{

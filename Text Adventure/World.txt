@@ -1,7 +1,3 @@
-<Name>   Troy
-<health> 275 
-<weapon> dagger
-<damage> 21
 <Start>  Middle
 
 <Middle>
@@ -29,10 +25,15 @@ There is only one door to the east where you came. *
 <south> None
 <west>  None
 <look>  1 fountain
-<enemy> None
+<enemy> slime
 
 <Left|fountain>
 A beautiful fountain stands erected in the middle of the room.  It kinda makes you thirsty. *
+
+<Left|slime>
+<Health> 50
+<Damage> 5
+The slime squirts at you. *
 
 <Bottom>
 You step back outside of the mansion and grab some fresh air.

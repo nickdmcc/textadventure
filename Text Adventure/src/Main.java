@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main{
 	public String labelText = "";
 	public Monster[] monster = new Monster[Constants.NUM_OF_MONSTERS];
-	int k = -1;
+	int k = 0;
 	
 	/**
 	 * Updates label component if it is end game or if there is a place you cannot move to.
@@ -255,9 +255,6 @@ public class Main{
 		{
 			Scanner s = new Scanner(new FileReader(Constants.CHAR_FILE));
 			s.next();
-			tempString = s.next();
-			Constants.PLAYER.setName(tempString);
-			s.next();
 			data = s.nextInt();
 			Constants.PLAYER.setHealth(data);
 			s.next();
@@ -279,6 +276,7 @@ public class Main{
 	 */
 	public static void main(String[] args)
 	{	
+		Constants.WINDOW.setPlayerName();
 		getPlayerStats();
 		
 		try{
