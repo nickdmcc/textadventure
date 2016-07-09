@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main{
 	public String labelText = "";
 	public Monster[] monster = new Monster[Constants.NUM_OF_MONSTERS];
-	int k = 0;
+	int k = -1;
 	
 	/**
 	 * Updates label component if it is end game or if there is a place you cannot move to.
@@ -184,15 +184,11 @@ public class Main{
 	{
 		String strMonsterRoom = "<" + room.getCurrentRoom() + "|" + strMonster + ">";
 		String tempString = "";
-		for (int i = 0; i < monster.length; i++)
+		for (int k = 0; k < monster.length; k++)
 		{
-			if (monster[i] != null && monster[i].getName().equals(strMonster))
+			if (monster[k] != null && monster[k].getName().equals(strMonster))
 			{
 				return;
-			}
-			else
-			{
-				k = i;
 			}
 		}
 		try{
@@ -204,6 +200,7 @@ public class Main{
 				
 				if (strLine.equals(strMonsterRoom))
 				{
+					k++;
 					monster[k] = new Monster();
 					monster[k].setMonsterInRoom(true);
 		    		monster[k].setName(strMonster);
