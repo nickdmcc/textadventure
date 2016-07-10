@@ -2,6 +2,9 @@ import java.io.FileReader;
 import java.util.Scanner;
 
 public class Main{
+	
+	public static final String CHAR_FILE = "PlayerStats";
+
 	public String labelText = "";
 	public Monster[] monster = new Monster[Constants.NUM_OF_MONSTERS];
 	int k = 0;
@@ -12,7 +15,7 @@ public class Main{
 	 * @param room
 	 * @param strRoom
 	 */
-	public void move(Room room, String strRoom, GameWindow window)
+	public void move(Room room, String strRoom, GameWindow window, Player player)
 	{
 		if ((room.getRoomEast().equals("None") && room.getRoomNorth().equals("None") && room.getRoomSouth().equals("None") && room.getRoomWest().equals("None")))
 		{
@@ -34,10 +37,10 @@ public class Main{
 		
 		room.setCurrentRoom(strRoom);
 		
-		getRoomInfo(Constants.FILE, Constants.ROOM, window);
-		Constants.WINDOW.displayRoom(room);
-		Constants.WINDOW.setMonster(monster[k]);
-		Constants.WINDOW.checkMonster(monster[k]);
+		getRoomInfo(Constants.FILE, room, window);
+		window.displayRoom(room);
+		window.setMonster(monster[k]);
+		window.checkMonster(monster[k], player);
 	}
 
 	/**
@@ -132,7 +135,7 @@ public class Main{
 		    }
 	}
 	
-	public void getLookInfo(String file, Room room, String strItem)
+	public void getLookInfo(String file, Room room, String strItem, GameWindow window)
 	{
 		String strLookRoom = "<" + room.getCurrentRoom() + "|" + strItem + ">";
 		String tempString = "";
@@ -167,7 +170,7 @@ public class Main{
 				   		tempString += "\n";
 					}	
 					room.setStrLookDescription(tempString);
-					Constants.WINDOW.displayLook(room.getStrLookDescription());
+					window.displayLook(room.getStrLookDescription());
 		    		s.close();
 		    		return;
 				}
@@ -247,22 +250,23 @@ public class Main{
 		    }
 	}
 	
-	public static void getPlayerStats()
+	public void getPlayerStats(GameWindow window, Player player)
 	{
+		window.setPlayerName();
 		String tempString;
 		int data;
 		try
 		{
-			Scanner s = new Scanner(new FileReader(Constants.CHAR_FILE));
+			Scanner s = new Scanner(new FileReader(CHAR_FILE));
 			s.next();
 			data = s.nextInt();
-			Constants.PLAYER.setHealth(data);
+			player.setHealth(data);
 			s.next();
 			tempString = s.next();
-			Constants.PLAYER.setWeapon(tempString);
+			player.setWeapon(tempString);
 			s.next();
 			data = s.nextInt();
-			Constants.PLAYER.setDamage(data);
+			player.setDamage(data);
 			s.close();
 		}catch (Exception e){
 		      System.err.println("Error: " + e.getMessage());
@@ -276,15 +280,21 @@ public class Main{
 	 */
 	public static void main(String[] args)
 	{	
-		Constants.WINDOW.setPlayerName();
-		getPlayerStats();
-		
+		Main game = new Main();
+		GameWindow window = new GameWindow();
+		Room room = new Room();
+		Player player = new Player();
+		window.setRoom(room);
+		window.setGameWindow(window);
+		window.setPlayer(player);
+		window.setMain(game);
+		game.getPlayerStats(window, player);		
 		try{
 			Scanner s = new Scanner(new FileReader(Constants.FILE));
 			s.next();
-			Constants.ROOM.setCurrentRoom(s.next());
-			Constants.GAME.getRoomInfo(Constants.FILE, Constants.ROOM, Constants.WINDOW);
-			Constants.WINDOW.displayRoom(Constants.ROOM);
+			room.setCurrentRoom(s.next());
+			game.getRoomInfo(Constants.FILE, room, window);
+			window.displayRoom(room);
 			s.close();
 		}catch (Exception e){//Catch exception if any
 		      System.err.println("Error: " + e.getMessage());

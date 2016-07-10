@@ -20,6 +20,11 @@ public class GameWindow extends JFrame{
 	
 	public Monster monster = new Monster();
 	
+	public GameWindow window;
+	public Main game;
+	public Player player;
+	public Room room;
+	
 	static JPanel thePanel = new JPanel();
 	static JPanel monsterPanel = new JPanel();
 	static JPanel startPanel = new JPanel();
@@ -129,7 +134,6 @@ public class GameWindow extends JFrame{
 		addComp(thePanel, actionBox, 0, 4, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 
 		this.add(thePanel);
-		//this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
@@ -209,10 +213,10 @@ public class GameWindow extends JFrame{
 	public void listItems()
 	{
 		String[] itemArray = new String[Constants.MAX_LOOKS];
-		if (Constants.ROOM.getStrLookArray().length != 0)
+		if (room.getStrLookArray().length != 0)
 		{
 			thePanel.remove(label1);
-			itemArray = Constants.ROOM.getStrLookArray();
+			itemArray = room.getStrLookArray();
 			itemBox = Box.createHorizontalBox();
 			button6 = new JButton();
 			ListenForButton lForButton1 = new ListenForButton();
@@ -276,10 +280,10 @@ public class GameWindow extends JFrame{
 		}
 	}
 	
-	public void displayStatus()
+	public void displayStatus(Player player)
 	{
-		String strPlayer = "Name: " + Constants.PLAYER.getName() + "\n" +  "Health: " + Constants.PLAYER.getHealth() + "\n\n" +
-					"Weapon: " + Constants.PLAYER.getWeapon() + "\n" + "Damage: " + Constants.PLAYER.getDamage() + "\n";
+		String strPlayer = "Name: " + player.getName() + "\n" +  "Health: " + player.getHealth() + "\n\n" +
+					"Weapon: " + player.getWeapon() + "\n" + "Damage: " + player.getDamage() + "\n";
 		textArea2.setText(strPlayer);
 		textArea2.setEditable(false);
 		
@@ -295,7 +299,7 @@ public class GameWindow extends JFrame{
 		}
 	}
 	
-	public void checkMonster(Monster monster)
+	public void checkMonster(Monster monster, Player player)
 	{
 		if (monster != null)
 		{
@@ -303,7 +307,7 @@ public class GameWindow extends JFrame{
 			{
 				thePanel.setVisible(false);
 				monsterPanel.setVisible(true);
-				attackMonster(monster);
+				attackMonster(monster, player);
 			}
 			
 			else
@@ -315,14 +319,14 @@ public class GameWindow extends JFrame{
 		
 	}
 	
-	public void attackMonster(Monster monster)
+	public void attackMonster(Monster monster, Player player)
 	{	
 		this.add(monsterPanel);
 		textArea4.append("Oh no! A " + monster.getName() + " has appeared!\n\n");
 		while(monster.isMonsterInRoom())
 		{
-			textArea4.append(Constants.PLAYER.getName() + " attacks with a " + Constants.PLAYER.getWeapon() + "\n");
-			monster.setHealth(monster.getHealth() - Constants.PLAYER.getDamage());
+			textArea4.append(player.getName() + " attacks with a " + player.getWeapon() + "\n");
+			monster.setHealth(monster.getHealth() - player.getDamage());
 			if (monster.getHealth() < 0)
 			{
 				textArea4.append("\nThe " + monster.getName() + " has been killed.");
@@ -336,8 +340,8 @@ public class GameWindow extends JFrame{
 			else
 			{
 				textArea4.append(monster.getAttackMessage() + "\n");
-				Constants.PLAYER.setHealth(Constants.PLAYER.getHealth() - monster.getDamage());
-				if (Constants.PLAYER.getHealth() < 0)
+				player.setHealth(player.getHealth() - monster.getDamage());
+				if (player.getHealth() < 0)
 				{
 					textArea4.append("\n\nYou are dead.");
 					break;
@@ -346,11 +350,6 @@ public class GameWindow extends JFrame{
 
 		}
 		
-	}
-	
-	public void setMonster(Monster monster)
-	{
-		this.monster = monster;
 	}
 	
 	public void setPlayerName()
@@ -363,6 +362,31 @@ public class GameWindow extends JFrame{
 	{
 		startPanel.setVisible(false);
 		thePanel.setVisible(true);
+	}
+	
+	public void setMonster(Monster monster)
+	{
+		this.monster = monster;
+	}
+	
+	public void setGameWindow(GameWindow window)
+	{
+		this.window = window;
+	}
+	
+	public void setMain(Main game)
+	{
+		this.game = game;
+	}
+	
+	public void setPlayer(Player player)
+	{
+		this.player = player;
+	}
+	
+	public void setRoom(Room room)
+	{
+		this.room = room;
 	}
 	
 	/**
@@ -380,14 +404,14 @@ public class GameWindow extends JFrame{
 				removeDisplayLook();
 				removeItemButton();
 				addLabelComponent();
-				Constants.GAME.move(Constants.ROOM, Constants.ROOM.getRoomNorth(), Constants.WINDOW);
+				game.move(room, room.getRoomNorth(), window, player);
 			}
 			else if (e.getSource() == button2)
 			{
 				removeDisplayLook();
 				removeItemButton();
 				addLabelComponent();
-				Constants.GAME.move(Constants.ROOM, Constants.ROOM.getRoomEast(), Constants.WINDOW);
+				game.move(room, room.getRoomEast(), window, player);
 
 			}
 			else if (e.getSource() == button3)
@@ -395,7 +419,7 @@ public class GameWindow extends JFrame{
 				removeDisplayLook();
 				removeItemButton();
 				addLabelComponent();
-				Constants.GAME.move(Constants.ROOM, Constants.ROOM.getRoomSouth(), Constants.WINDOW);
+				game.move(room, room.getRoomSouth(), window, player);
 
 			}
 			else if (e.getSource() == button4)
@@ -403,7 +427,7 @@ public class GameWindow extends JFrame{
 				removeDisplayLook();
 				removeItemButton();
 				addLabelComponent();
-				Constants.GAME.move(Constants.ROOM, Constants.ROOM.getRoomWest(), Constants.WINDOW);
+				game.move(room, room.getRoomWest(), window, player);
 
 			}
 			else if (e.getSource() == button5)
@@ -415,27 +439,27 @@ public class GameWindow extends JFrame{
 			else if (e.getSource() == button6)
 			{
 				removeDisplayLook();
-				Constants.GAME.getLookInfo(Constants.FILE, Constants.ROOM, button6.getText());
+				game.getLookInfo(Constants.FILE, room, button6.getText(), window);
 			}
 			else if (e.getSource() == button7)
 			{
 				removeDisplayLook();
-				Constants.GAME.getLookInfo(Constants.FILE, Constants.ROOM, button7.getText());
+				game.getLookInfo(Constants.FILE, room, button7.getText(), window);
 			}
 			else if (e.getSource() == button8)
 			{
 				removeDisplayLook();
-				Constants.GAME.getLookInfo(Constants.FILE, Constants.ROOM, button8.getText());
+				game.getLookInfo(Constants.FILE, room, button8.getText(), window);
 			}
 			else if (e.getSource() == button9)
 			{
-				Constants.WINDOW.displayStatus();
+				window.displayStatus(player);
 			}
 			else if (e.getSource() == button10)
 			{
 				monsterPanel.remove(button10);
 				textArea4.setText("");
-				checkMonster(monster);
+				checkMonster(monster, player);
 			}
 			else if (e.getSource() == button11)
 			{
@@ -451,7 +475,7 @@ public class GameWindow extends JFrame{
 				                return;
 				            }
 				        }
-					Constants.PLAYER.setName(textName.getText());
+					player.setName(textName.getText());
 					startGame();
 				}
 			}
