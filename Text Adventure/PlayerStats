@@ -1,0 +1,19 @@
+<Guard>
+<health> 300 
+<weapon> polearm
+<damage> 21
+
+<Assassin>
+<health> 165
+<weapon> ninja-stars
+<damage> 35
+
+<Bandit>
+<health> 200
+<weapon> dagger
+<damage> 28
+
+<Fighter>
+<health> 265
+<weapon> sword
+<damage> 24

@@ -14,7 +14,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-
+/**
+ * 
+ * @author Nicholas McCarty
+ *
+ */
 @SuppressWarnings("serial")
 public class GameWindow extends JFrame{
 	
@@ -27,6 +31,7 @@ public class GameWindow extends JFrame{
 	
 	static JPanel thePanel = new JPanel();
 	static JPanel monsterPanel = new JPanel();
+	static JPanel classPanel = new JPanel();
 	static JPanel startPanel = new JPanel();
 	
 	JButton button1;
@@ -40,20 +45,29 @@ public class GameWindow extends JFrame{
 	JButton button9;
 	JButton button10;
 	JButton button11;
+	JButton button12;
+	JButton button13;
+	JButton button14;
+	JButton button15;
+	JButton button16;
 	ButtonGroup directionGroup = new ButtonGroup();
+	ButtonGroup classGroup = new ButtonGroup();
 	ButtonGroup actionGroup = new ButtonGroup();
 	ButtonGroup itemGroup = new ButtonGroup();
 	Box directionBox;
+	Box classBox;
 	Box actionBox;
 	Box itemBox;
 	static JLabel label1;
 	static JLabel label2;
 	static JLabel label3;
+	static JLabel label4;
 	static JTextArea textName;
 	static JTextArea textArea1;
 	static JTextArea textArea2 = new JTextArea();
 	static JTextArea textArea3 = new JTextArea();
 	static JTextArea textArea4 = new JTextArea();
+	static JTextArea textArea5 = new JTextArea();
 	
 	/**
 	 * Creates the game window and all of its components.
@@ -78,7 +92,45 @@ public class GameWindow extends JFrame{
 		
 		label3 = new JLabel();
 		addComp(startPanel, label3, 1, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
-				
+		
+		classPanel.setLayout(new GridBagLayout());
+		label4 = new JLabel("Choose your class");
+		addComp(classPanel, label4, 0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		classBox = Box.createHorizontalBox();
+		button12 = new JButton("Guard");
+		ListenForButton lForButtonGuard = new ListenForButton();
+		button12.addActionListener(lForButtonGuard);
+		button13 = new JButton("Assassin");
+		ListenForButton lForButtonAssassin = new ListenForButton();
+		button13.addActionListener(lForButtonAssassin);
+		button14 = new JButton("Bandit");
+		ListenForButton lForButtonBandit = new ListenForButton();
+		button14.addActionListener(lForButtonBandit);
+		button15 = new JButton("Fighter");
+		ListenForButton lForButtonFighter = new ListenForButton();
+		button15.addActionListener(lForButtonFighter);
+		classGroup.add(button12);
+		classGroup.add(button13);
+		classGroup.add(button14);
+		classGroup.add(button15);
+		classBox.add(button12);
+		classBox.add(button13);
+		classBox.add(button14);
+		classBox.add(button15);
+		classBox.setBorder(BorderFactory.createTitledBorder("Classes"));
+		addComp(classPanel, classBox, 0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		textArea5.setEditable(false);
+		textArea5.setVisible(false);
+		addComp(classPanel, textArea5, 0, 2, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		button16 = new JButton("Choose");
+		ListenForButton lForButtonChoose = new ListenForButton();
+		button16.addActionListener(lForButtonChoose); 
+		button16.setVisible(false);
+		addComp(classPanel, button16, 0, 3, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+			
 		monsterPanel.setLayout(new GridBagLayout());
 		textArea4.setEditable(false);
 		addComp(monsterPanel, textArea4, 0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
@@ -283,7 +335,8 @@ public class GameWindow extends JFrame{
 	public void displayStatus(Player player)
 	{
 		String strPlayer = "Name: " + player.getName() + "\n" +  "Health: " + player.getHealth() + "\n\n" +
-					"Weapon: " + player.getWeapon() + "\n" + "Damage: " + player.getDamage() + "\n";
+					"Class: " + player.getClassName() + "\n" + "Weapon: " + player.getWeapon() + "\n" + 
+					"Damage: " + player.getDamage() + "\n";
 		textArea2.setText(strPlayer);
 		textArea2.setEditable(false);
 		
@@ -358,9 +411,25 @@ public class GameWindow extends JFrame{
 		this.add(startPanel);
 	}
 	
-	public void startGame()
+	public void chooseClass()
 	{
 		startPanel.setVisible(false);
+		this.add(classPanel);
+	}
+	
+	public void confirmClass(String className, Player player)
+	{
+		textArea5.setVisible(true);
+		textArea5.setText("Are you sure you want to be a " + className +"?\n"
+						+ "Health: " + player.getHealth() +"\n"
+						+ "Weapon: " + player.getWeapon() +"\n"
+						+ "Damage: " + player.getDamage());
+		button16.setVisible(true);
+	}
+	
+	public void startGame()
+	{
+		classPanel.setVisible(false);
 		thePanel.setVisible(true);
 	}
 	
@@ -476,8 +545,32 @@ public class GameWindow extends JFrame{
 				            }
 				        }
 					player.setName(textName.getText());
-					startGame();
+					chooseClass();
 				}
+			}
+			else if (e.getSource() == button12)
+			{
+				game.setClass(player, window, button12.getText());
+				confirmClass(button12.getText(), player);
+			}
+			else if (e.getSource() == button13)
+			{
+				game.setClass(player, window, button13.getText());
+				confirmClass(button13.getText(), player);
+			}
+			else if (e.getSource() == button14)
+			{
+				game.setClass(player, window, button14.getText());
+				confirmClass(button14.getText(), player);
+			}
+			else if (e.getSource() == button15)
+			{
+				game.setClass(player, window, button15.getText());
+				confirmClass(button15.getText(), player);
+			}
+			else if (e.getSource() == button16)
+			{
+				startGame();
 			}
 			else
 			{

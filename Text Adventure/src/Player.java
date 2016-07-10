@@ -1,6 +1,7 @@
 
 public class Player {
 	private String name;
+	private String className;
 	private String weapon;
 	private int health;
 	private int damage;
@@ -28,6 +29,12 @@ public class Player {
 	}
 	public void setDamage(int damage) {
 		this.damage = damage;
+	}
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
 	}
 
 }

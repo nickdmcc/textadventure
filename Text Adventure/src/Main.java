@@ -250,28 +250,38 @@ public class Main{
 		    }
 	}
 	
-	public void getPlayerStats(GameWindow window, Player player)
+	public void setClass(Player player, GameWindow window, String className)
 	{
-		window.setPlayerName();
+		String strClassName = "<" + className + ">";
 		String tempString;
 		int data;
 		try
 		{
 			Scanner s = new Scanner(new FileReader(CHAR_FILE));
-			s.next();
-			data = s.nextInt();
-			player.setHealth(data);
-			s.next();
-			tempString = s.next();
-			player.setWeapon(tempString);
-			s.next();
-			data = s.nextInt();
-			player.setDamage(data);
+			String strLine = "";
+			while ((strLine = s.nextLine()) != null)
+			{
+				if (strLine.equals(strClassName))
+				{
+					player.setClassName(className);
+					s.next();
+					data = s.nextInt();
+					player.setHealth(data);
+					s.next();
+					tempString = s.next();
+					player.setWeapon(tempString);
+					s.next();
+					data = s.nextInt();
+					player.setDamage(data);
+					s.close();
+					return;
+				}
+				
+			}
 			s.close();
 		}catch (Exception e){
 		      System.err.println("Error: " + e.getMessage());
 		}
-		
 	}
 	
 	/**
@@ -284,11 +294,11 @@ public class Main{
 		GameWindow window = new GameWindow();
 		Room room = new Room();
 		Player player = new Player();
+		window.setPlayerName();
 		window.setRoom(room);
 		window.setGameWindow(window);
 		window.setPlayer(player);
 		window.setMain(game);
-		game.getPlayerStats(window, player);		
 		try{
 			Scanner s = new Scanner(new FileReader(Constants.FILE));
 			s.next();
