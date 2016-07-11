@@ -5,6 +5,7 @@ public class Player {
 	private String weapon;
 	private int health;
 	private int damage;
+	private int runChance;
 	
 	public String getName() {
 		return name;
@@ -35,6 +36,12 @@ public class Player {
 	}
 	public void setClassName(String className) {
 		this.className = className;
+	}
+	public int getRunChance() {
+		return runChance;
+	}
+	public void setRunChance(int runChance) {
+		this.runChance = runChance;
 	}
 
 }

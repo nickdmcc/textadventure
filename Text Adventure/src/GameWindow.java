@@ -3,6 +3,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -50,6 +51,8 @@ public class GameWindow extends JFrame{
 	JButton button14;
 	JButton button15;
 	JButton button16;
+	JButton button17;
+	JButton button18;
 	ButtonGroup directionGroup = new ButtonGroup();
 	ButtonGroup classGroup = new ButtonGroup();
 	ButtonGroup actionGroup = new ButtonGroup();
@@ -134,6 +137,22 @@ public class GameWindow extends JFrame{
 		monsterPanel.setLayout(new GridBagLayout());
 		textArea4.setEditable(false);
 		addComp(monsterPanel, textArea4, 0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		button17 = new JButton("Attack");
+		ListenForButton lForButtonAttack = new ListenForButton();
+		button17.addActionListener(lForButtonAttack);
+		addComp(monsterPanel, button17, 1, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		button18 = new JButton("Run");
+		ListenForButton lForButtonRun = new ListenForButton();
+		button18.addActionListener(lForButtonRun);
+		addComp(monsterPanel, button18, 2, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		button10 = new JButton("OK");
+		ListenForButton lForButtonOK = new ListenForButton();
+		button10.addActionListener(lForButtonOK);
+		addComp(monsterPanel, button10, 0, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		button10.setVisible(false);
 		
 		thePanel.setLayout(new GridBagLayout());
 		
@@ -336,7 +355,7 @@ public class GameWindow extends JFrame{
 	{
 		String strPlayer = "Name: " + player.getName() + "\n" +  "Health: " + player.getHealth() + "\n\n" +
 					"Class: " + player.getClassName() + "\n" + "Weapon: " + player.getWeapon() + "\n" + 
-					"Damage: " + player.getDamage() + "\n";
+					"Damage: " + player.getDamage() + "\n" + "Run chance: " + player.getRunChance();
 		textArea2.setText(strPlayer);
 		textArea2.setEditable(false);
 		
@@ -360,7 +379,9 @@ public class GameWindow extends JFrame{
 			{
 				thePanel.setVisible(false);
 				monsterPanel.setVisible(true);
-				attackMonster(monster, player);
+				button17.setVisible(true);
+				button18.setVisible(true);
+				displayMonsterInRoom(monster, player);
 			}
 			
 			else
@@ -374,35 +395,62 @@ public class GameWindow extends JFrame{
 	
 	public void attackMonster(Monster monster, Player player)
 	{	
-		this.add(monsterPanel);
-		textArea4.append("Oh no! A " + monster.getName() + " has appeared!\n\n");
-		while(monster.isMonsterInRoom())
+		if (monster.getHealth() < 0)
 		{
-			textArea4.append(player.getName() + " attacks with a " + player.getWeapon() + "\n");
-			monster.setHealth(monster.getHealth() - player.getDamage());
-			if (monster.getHealth() < 0)
-			{
-				textArea4.append("\nThe " + monster.getName() + " has been killed.");
-				monster.setMonsterInRoom(false);
-				button10 = new JButton("OK");
-				ListenForButton lForButtonOK = new ListenForButton();
-				button10.addActionListener(lForButtonOK);
-				addComp(monsterPanel, button10, 0, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
-				monsterPanel.updateUI();
-			}
-			else
-			{
-				textArea4.append(monster.getAttackMessage() + "\n");
-				player.setHealth(player.getHealth() - monster.getDamage());
-				if (player.getHealth() < 0)
-				{
-					textArea4.append("\n\nYou are dead.");
-					break;
-				}
-			}
-
+			textArea4.setText("The " + monster.getName() + " has been killed.\n");
+			monster.setMonsterInRoom(false);
+			button10.setVisible(true);
+			button17.setVisible(false);
+			button18.setVisible(false);
 		}
-		
+		else
+		{
+			textArea4.setText(player.getName() + " attacks with a " + player.getWeapon() +  " and deals " + player.getDamage() + "\n");
+			monster.setHealth(monster.getHealth() - player.getDamage());
+			player.setHealth(player.getHealth() - monster.getDamage());
+			textArea4.append(monster.getAttackMessage() + "\n" 
+							+ "You take " + monster.getDamage() + " points of damage.\n"
+							+ "Your health is now " + player.getHealth());
+			if (player.getHealth() < 0)
+			{
+				textArea4.append("\n\nYou are dead.");
+				button17.setVisible(false);
+				button18.setVisible(false);
+			}
+		}
+	}
+	
+	public void runAway(Monster monster, Player player)
+	{
+		Random random = new Random();
+		int chance = random.nextInt(100);
+		if (chance <= player.getRunChance())
+		{
+			textArea4.setText("You escape from the " + monster.getName() + "!");
+			monster.setMonsterInRoom(false);
+			button17.setVisible(false);
+			button18.setVisible(false);
+			button10.setVisible(true);
+		}
+		else
+		{
+			player.setHealth(player.getHealth() - monster.getDamage());
+			textArea4.setText("You failed to run away!\n" + monster.getAttackMessage() + "\n" 
+					+ "You take " + monster.getDamage() + " points of damage.\n"
+					+ "Your health is now " + player.getHealth());
+			if (player.getHealth() < 0)
+			{
+				textArea4.append("\n\nYou are dead.");
+				button17.setVisible(false);
+				button18.setVisible(false);
+			}
+		}
+	}
+	
+	public void displayMonsterInRoom(Monster monster, Player player)
+	{
+		this.add(monsterPanel);
+		textArea4.append("Oh no! A " + monster.getName() + " has appeared!\n\n");	
 	}
 	
 	public void setPlayerName()
@@ -423,7 +471,8 @@ public class GameWindow extends JFrame{
 		textArea5.setText("Are you sure you want to be a " + className +"?\n"
 						+ "Health: " + player.getHealth() +"\n"
 						+ "Weapon: " + player.getWeapon() +"\n"
-						+ "Damage: " + player.getDamage());
+						+ "Damage: " + player.getDamage() + "\n"
+						+ "Run chance: " + player.getRunChance());
 		button16.setVisible(true);
 	}
 	
@@ -526,7 +575,7 @@ public class GameWindow extends JFrame{
 			}
 			else if (e.getSource() == button10)
 			{
-				monsterPanel.remove(button10);
+				button10.setVisible(false);
 				textArea4.setText("");
 				checkMonster(monster, player);
 			}
@@ -571,6 +620,14 @@ public class GameWindow extends JFrame{
 			else if (e.getSource() == button16)
 			{
 				startGame();
+			}
+			else if (e.getSource() == button17)
+			{
+				attackMonster(monster, player);
+			}
+			else if (e.getSource() == button18)
+			{
+				runAway(monster, player);
 			}
 			else
 			{

@@ -2,18 +2,22 @@
 <health> 300 
 <weapon> polearm
 <damage> 21
+<run> 20
 
 <Assassin>
 <health> 165
 <weapon> ninja-stars
 <damage> 35
+<run> 45
 
 <Bandit>
 <health> 200
 <weapon> dagger
 <damage> 28
+<run> 30
 
 <Fighter>
 <health> 265
 <weapon> sword
 <damage> 24
+<run> 20

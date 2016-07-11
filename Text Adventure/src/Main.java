@@ -273,6 +273,9 @@ public class Main{
 					s.next();
 					data = s.nextInt();
 					player.setDamage(data);
+					s.next();
+					data = s.nextInt();
+					player.setRunChance(data);
 					s.close();
 					return;
 				}
