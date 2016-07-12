@@ -1,3 +1,5 @@
+import java.util.Random;
+
 
 public class Player {
 	private String name;
@@ -63,6 +65,13 @@ public class Player {
 	}
 	public void setMaxEnergy(int maxEnergy) {
 		this.maxEnergy = maxEnergy;
+	}
+	
+	public int attackDamageRange()
+	{
+		Random random = new Random();
+		int range = random.nextInt(4) + (damage - 2);
+		return range;
 	}
 
 }

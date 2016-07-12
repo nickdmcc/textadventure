@@ -1,3 +1,5 @@
+import java.util.Random;
+
 
 public class Monster {
 	private String name;
@@ -35,6 +37,13 @@ public class Monster {
 	}
 	public void setMonsterInRoom(boolean monsterInRoom) {
 		this.monsterInRoom = monsterInRoom;
+	}
+	
+	public int attackDamageRange()
+	{
+		Random random = new Random();
+		int range = random.nextInt(4) + (damage - 2);
+		return range;
 	}
 
 }

@@ -35,25 +35,25 @@ public class GameWindow extends JFrame{
 	static JPanel classPanel = new JPanel();
 	static JPanel startPanel = new JPanel();
 	
-	JButton button1;
-	JButton button2;
-	JButton button3;
-	JButton button4;
-	JButton button5;
-	JButton button6;
-	JButton button7;
-	JButton button8;
-	JButton button9;
-	JButton button10;
-	JButton button11;
-	JButton button12;
-	JButton button13;
-	JButton button14;
-	JButton button15;
-	JButton button16;
-	JButton button17;
-	JButton button18;
+	JButton buttonNorth;
+	JButton buttonEast;
+	JButton buttonSouth;
+	JButton buttonWest;
+	JButton buttonView;
+	JButton buttonStatus;
 	JButton buttonHeal;
+	JButton buttonItem1;
+	JButton buttonItem2;
+	JButton buttonItem3;
+	JButton buttonOk;
+	JButton buttonStart;
+	JButton buttonClass1;
+	JButton buttonClass2;
+	JButton buttonClass3;
+	JButton buttonClass4;
+	JButton buttonChoose;
+	JButton buttonAttack;
+	JButton buttonRun;
 	ButtonGroup directionGroup = new ButtonGroup();
 	ButtonGroup classGroup = new ButtonGroup();
 	ButtonGroup actionGroup = new ButtonGroup();
@@ -90,10 +90,10 @@ public class GameWindow extends JFrame{
 		textName = new JTextArea(1, 15);
 		addComp(startPanel, textName, 1, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);	
 		
-		button11 = new JButton("Start!");
+		buttonStart = new JButton("Start!");
 		ListenForButton lForButton11 = new ListenForButton();
-		button11.addActionListener(lForButton11);
-		addComp(startPanel, button11, 2, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		buttonStart.addActionListener(lForButton11);
+		addComp(startPanel, buttonStart, 2, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
 		label3 = new JLabel();
 		addComp(startPanel, label3, 1, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
@@ -103,26 +103,26 @@ public class GameWindow extends JFrame{
 		addComp(classPanel, label4, 0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
 		classBox = Box.createHorizontalBox();
-		button12 = new JButton("Guard");
+		buttonClass1 = new JButton("Guard");
 		ListenForButton lForButtonGuard = new ListenForButton();
-		button12.addActionListener(lForButtonGuard);
-		button13 = new JButton("Assassin");
+		buttonClass1.addActionListener(lForButtonGuard);
+		buttonClass2 = new JButton("Assassin");
 		ListenForButton lForButtonAssassin = new ListenForButton();
-		button13.addActionListener(lForButtonAssassin);
-		button14 = new JButton("Bandit");
+		buttonClass2.addActionListener(lForButtonAssassin);
+		buttonClass3 = new JButton("Bandit");
 		ListenForButton lForButtonBandit = new ListenForButton();
-		button14.addActionListener(lForButtonBandit);
-		button15 = new JButton("Fighter");
+		buttonClass3.addActionListener(lForButtonBandit);
+		buttonClass4 = new JButton("Fighter");
 		ListenForButton lForButtonFighter = new ListenForButton();
-		button15.addActionListener(lForButtonFighter);
-		classGroup.add(button12);
-		classGroup.add(button13);
-		classGroup.add(button14);
-		classGroup.add(button15);
-		classBox.add(button12);
-		classBox.add(button13);
-		classBox.add(button14);
-		classBox.add(button15);
+		buttonClass4.addActionListener(lForButtonFighter);
+		classGroup.add(buttonClass1);
+		classGroup.add(buttonClass2);
+		classGroup.add(buttonClass3);
+		classGroup.add(buttonClass4);
+		classBox.add(buttonClass1);
+		classBox.add(buttonClass2);
+		classBox.add(buttonClass3);
+		classBox.add(buttonClass4);
 		classBox.setBorder(BorderFactory.createTitledBorder("Classes"));
 		addComp(classPanel, classBox, 0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
@@ -130,11 +130,11 @@ public class GameWindow extends JFrame{
 		textArea5.setVisible(false);
 		addComp(classPanel, textArea5, 0, 2, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
-		button16 = new JButton("Choose");
+		buttonChoose = new JButton("Choose");
 		ListenForButton lForButtonChoose = new ListenForButton();
-		button16.addActionListener(lForButtonChoose); 
-		button16.setVisible(false);
-		addComp(classPanel, button16, 0, 3, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		buttonChoose.addActionListener(lForButtonChoose); 
+		buttonChoose.setVisible(false);
+		addComp(classPanel, buttonChoose, 0, 3, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 			
 		monsterPanel.setLayout(new GridBagLayout());
 		textArea4.setEditable(false);
@@ -144,21 +144,21 @@ public class GameWindow extends JFrame{
 		label5.setVisible(false);
 		addComp(monsterPanel, label5, 0, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE);
 		
-		button17 = new JButton("Attack");
+		buttonAttack = new JButton("Attack");
 		ListenForButton lForButtonAttack = new ListenForButton();
-		button17.addActionListener(lForButtonAttack);
-		addComp(monsterPanel, button17, 1, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		buttonAttack.addActionListener(lForButtonAttack);
+		addComp(monsterPanel, buttonAttack, 1, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
-		button18 = new JButton("Run");
+		buttonRun = new JButton("Run");
 		ListenForButton lForButtonRun = new ListenForButton();
-		button18.addActionListener(lForButtonRun);
-		addComp(monsterPanel, button18, 2, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		buttonRun.addActionListener(lForButtonRun);
+		addComp(monsterPanel, buttonRun, 2, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
-		button10 = new JButton("OK");
+		buttonOk = new JButton("OK");
 		ListenForButton lForButtonOK = new ListenForButton();
-		button10.addActionListener(lForButtonOK);
-		addComp(monsterPanel, button10, 0, 2, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
-		button10.setVisible(false);
+		buttonOk.addActionListener(lForButtonOK);
+		addComp(monsterPanel, buttonOk, 0, 2, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		buttonOk.setVisible(false);
 		
 		thePanel.setLayout(new GridBagLayout());
 		
@@ -172,45 +172,45 @@ public class GameWindow extends JFrame{
 		addComp(thePanel, label1, 0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
 		directionBox = Box.createHorizontalBox();
-		button1 = new JButton("North");
+		buttonNorth = new JButton("North");
 		ListenForButton lForButtonN = new ListenForButton();
-		button1.addActionListener(lForButtonN);
-		button2 = new JButton("East");
+		buttonNorth.addActionListener(lForButtonN);
+		buttonEast = new JButton("East");
 		ListenForButton lForButtonE = new ListenForButton();
-		button2.addActionListener(lForButtonE);
-		button3 = new JButton("South");
+		buttonEast.addActionListener(lForButtonE);
+		buttonSouth = new JButton("South");
 		ListenForButton lForButtonS = new ListenForButton();
-		button3.addActionListener(lForButtonS);
-		button4 = new JButton("West");
+		buttonSouth.addActionListener(lForButtonS);
+		buttonWest = new JButton("West");
 		ListenForButton lForButtonW = new ListenForButton();
-		button4.addActionListener(lForButtonW);
-		button5 = new JButton("View");
+		buttonWest.addActionListener(lForButtonW);
+		buttonView = new JButton("View");
 		ListenForButton lForButtonV = new ListenForButton();
-		button5.addActionListener(lForButtonV);
-		button9 = new JButton("Status");
+		buttonView.addActionListener(lForButtonV);
+		buttonStatus = new JButton("Status");
 		ListenForButton lForButtonSt = new ListenForButton();
-		button9.addActionListener(lForButtonSt);
+		buttonStatus.addActionListener(lForButtonSt);
 		buttonHeal = new JButton("Heal");
 		ListenForButton lForButtonHeal = new ListenForButton();
 		buttonHeal.addActionListener(lForButtonHeal);
 
-		directionGroup.add(button1);
-		directionGroup.add(button2);
-		directionGroup.add(button3);
-		directionGroup.add(button4);
-		directionBox.add(button1);
-		directionBox.add(button2);
-		directionBox.add(button3);
-		directionBox.add(button4);
+		directionGroup.add(buttonNorth);
+		directionGroup.add(buttonEast);
+		directionGroup.add(buttonSouth);
+		directionGroup.add(buttonWest);
+		directionBox.add(buttonNorth);
+		directionBox.add(buttonEast);
+		directionBox.add(buttonSouth);
+		directionBox.add(buttonWest);
 		directionBox.setBorder(BorderFactory.createTitledBorder("Directions"));
 		addComp(thePanel, directionBox, 0, 3, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
 		actionBox = Box.createHorizontalBox();
-		actionGroup.add(button5);
-		actionGroup.add(button9);
+		actionGroup.add(buttonView);
+		actionGroup.add(buttonStatus);
 		actionGroup.add(buttonHeal);
-		actionBox.add(button5);
-		actionBox.add(button9);
+		actionBox.add(buttonView);
+		actionBox.add(buttonStatus);
 		actionBox.add(buttonHeal);
 		actionBox.setBorder(BorderFactory.createTitledBorder("Actions"));
 		addComp(thePanel, actionBox, 0, 4, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
@@ -253,20 +253,20 @@ public class GameWindow extends JFrame{
 	{
 		if (itemGroup.getButtonCount() == 1)
 		{
-			itemGroup.remove(button6);
+			itemGroup.remove(buttonItem1);
 			thePanel.remove(itemBox);
 		}
 		else if (itemGroup.getButtonCount() == 2)
 		{
-			itemGroup.remove(button6);
-			itemGroup.remove(button7);
+			itemGroup.remove(buttonItem1);
+			itemGroup.remove(buttonItem2);
 			thePanel.remove(itemBox);
 		}
 		else if (itemGroup.getButtonCount() == 3)
 		{
-			itemGroup.remove(button6);
-			itemGroup.remove(button7);
-			itemGroup.remove(button8);
+			itemGroup.remove(buttonItem1);
+			itemGroup.remove(buttonItem2);
+			itemGroup.remove(buttonItem3);
 			thePanel.remove(itemBox);
 		}
 		else
@@ -300,33 +300,33 @@ public class GameWindow extends JFrame{
 			thePanel.remove(label1);
 			itemArray = room.getStrLookArray();
 			itemBox = Box.createHorizontalBox();
-			button6 = new JButton();
+			buttonItem1 = new JButton();
 			ListenForButton lForButton1 = new ListenForButton();
-			button6.addActionListener(lForButton1);
-			button7 = new JButton();
+			buttonItem1.addActionListener(lForButton1);
+			buttonItem2 = new JButton();
 			ListenForButton lForButton2 = new ListenForButton();
-			button7.addActionListener(lForButton2);
-			button8 = new JButton();
+			buttonItem2.addActionListener(lForButton2);
+			buttonItem3 = new JButton();
 			ListenForButton lForButton3 = new ListenForButton();
-			button8.addActionListener(lForButton3);
+			buttonItem3.addActionListener(lForButton3);
 			
 			if (itemArray[0] != null)
 			{
-				button6.setText(itemArray[0]);
-				itemGroup.add(button6);
-				itemBox.add(button6);
+				buttonItem1.setText(itemArray[0]);
+				itemGroup.add(buttonItem1);
+				itemBox.add(buttonItem1);
 			}
 			if (itemArray[1] != null)
 			{
-				button7.setText(itemArray[1]);
-				itemGroup.add(button7);
-				itemBox.add(button7);
+				buttonItem2.setText(itemArray[1]);
+				itemGroup.add(buttonItem2);
+				itemBox.add(buttonItem2);
 			}
 			if (itemArray[2] != null)
 			{
-				button8.setText(itemArray[2]);
-				itemGroup.add(button8);
-				itemBox.add(button8);
+				buttonItem3.setText(itemArray[2]);
+				itemGroup.add(buttonItem3);
+				itemBox.add(buttonItem3);
 			}
 			
 			itemBox.setBorder(BorderFactory.createTitledBorder("Items"));
@@ -424,8 +424,8 @@ public class GameWindow extends JFrame{
 				monsterPanel.setVisible(true);
 				label5.setVisible(true);
 				label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
-				button17.setVisible(true);
-				button18.setVisible(true);
+				buttonAttack.setVisible(true);
+				buttonRun.setVisible(true);
 				displayMonsterInRoom(monster, player);
 			}
 			
@@ -440,21 +440,25 @@ public class GameWindow extends JFrame{
 	
 	public void attackMonster(Monster monster, Player player)
 	{	
+		int attack = 0;
+		int monsterAttack = 0;
 		if (monster.getHealth() < 0)
 		{
 			textArea4.setText("The " + monster.getName() + " has been killed.\n");
 			monster.setMonsterInRoom(false);
-			button10.setVisible(true);
-			button17.setVisible(false);
-			button18.setVisible(false);
+			buttonOk.setVisible(true);
+			buttonAttack.setVisible(false);
+			buttonRun.setVisible(false);
 		}
 		else
 		{
-			textArea4.setText(player.getName() + " attacks with a " + player.getWeapon() +  " and deals " + player.getDamage() + "\n");
-			monster.setHealth(monster.getHealth() - player.getDamage());
-			player.setHealth(player.getHealth() - monster.getDamage());
+			attack = player.attackDamageRange();
+			monsterAttack = monster.attackDamageRange();
+			textArea4.setText(player.getName() + " attacks with a " + player.getWeapon() +  " and deals " + attack + " \n");
+			monster.setHealth(monster.getHealth() - attack);
+			player.setHealth(player.getHealth() - monsterAttack);
 			textArea4.append(monster.getAttackMessage() + "\n" 
-							+ "You take " + monster.getDamage() + " points of damage.");
+							+ "You take " + monsterAttack + " points of damage.");
 			label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
 			if (player.getEnergy() < player.getMaxEnergy())
 			{
@@ -463,8 +467,8 @@ public class GameWindow extends JFrame{
 			if (player.getHealth() < 0)
 			{
 				textArea4.append("\n\nYou are dead.");
-				button17.setVisible(false);
-				button18.setVisible(false);
+				buttonAttack.setVisible(false);
+				buttonRun.setVisible(false);
 			}
 		}
 	}
@@ -477,9 +481,9 @@ public class GameWindow extends JFrame{
 		{
 			textArea4.setText("You escape from the " + monster.getName() + "!");
 			monster.setMonsterInRoom(false);
-			button17.setVisible(false);
-			button18.setVisible(false);
-			button10.setVisible(true);
+			buttonAttack.setVisible(false);
+			buttonRun.setVisible(false);
+			buttonOk.setVisible(true);
 		}
 		else
 		{
@@ -490,8 +494,8 @@ public class GameWindow extends JFrame{
 			if (player.getHealth() < 0)
 			{
 				textArea4.append("\n\nYou are dead.");
-				button17.setVisible(false);
-				button18.setVisible(false);
+				buttonAttack.setVisible(false);
+				buttonRun.setVisible(false);
 			}
 		}
 	}
@@ -522,7 +526,7 @@ public class GameWindow extends JFrame{
 						+ "Weapon: " + player.getWeapon() +"\n"
 						+ "Damage: " + player.getDamage() + "\n"
 						+ "Run chance: " + player.getRunChance());
-		button16.setVisible(true);
+		buttonChoose.setVisible(true);
 	}
 	
 	public void startGame()
@@ -566,14 +570,14 @@ public class GameWindow extends JFrame{
 		
 		public void actionPerformed(ActionEvent e)
 		{
-			if (e.getSource() == button1)
+			if (e.getSource() == buttonNorth)
 			{
 				removeDisplayLook();
 				removeItemButton();
 				addLabelComponent();
 				game.move(room, room.getRoomNorth(), window, player);
 			}
-			else if (e.getSource() == button2)
+			else if (e.getSource() == buttonEast)
 			{
 				removeDisplayLook();
 				removeItemButton();
@@ -581,7 +585,7 @@ public class GameWindow extends JFrame{
 				game.move(room, room.getRoomEast(), window, player);
 
 			}
-			else if (e.getSource() == button3)
+			else if (e.getSource() == buttonSouth)
 			{
 				removeDisplayLook();
 				removeItemButton();
@@ -589,7 +593,7 @@ public class GameWindow extends JFrame{
 				game.move(room, room.getRoomSouth(), window, player);
 
 			}
-			else if (e.getSource() == button4)
+			else if (e.getSource() == buttonWest)
 			{
 				removeDisplayLook();
 				removeItemButton();
@@ -597,38 +601,38 @@ public class GameWindow extends JFrame{
 				game.move(room, room.getRoomWest(), window, player);
 
 			}
-			else if (e.getSource() == button5)
+			else if (e.getSource() == buttonView)
 			{
 				removeDisplayLook();
 				removeItemButton();
 				listItems();
 			}
-			else if (e.getSource() == button6)
+			else if (e.getSource() == buttonItem1)
 			{
 				removeDisplayLook();
-				game.getLookInfo(Constants.FILE, room, button6.getText(), window);
+				game.getLookInfo(Constants.FILE, room, buttonItem1.getText(), window);
 			}
-			else if (e.getSource() == button7)
+			else if (e.getSource() == buttonItem2)
 			{
 				removeDisplayLook();
-				game.getLookInfo(Constants.FILE, room, button7.getText(), window);
+				game.getLookInfo(Constants.FILE, room, buttonItem2.getText(), window);
 			}
-			else if (e.getSource() == button8)
+			else if (e.getSource() == buttonItem3)
 			{
 				removeDisplayLook();
-				game.getLookInfo(Constants.FILE, room, button8.getText(), window);
+				game.getLookInfo(Constants.FILE, room, buttonItem3.getText(), window);
 			}
-			else if (e.getSource() == button9)
+			else if (e.getSource() == buttonStatus)
 			{
 				window.displayStatus(player);
 			}
-			else if (e.getSource() == button10)
+			else if (e.getSource() == buttonOk)
 			{
-				button10.setVisible(false);
+				buttonOk.setVisible(false);
 				textArea4.setText("");
 				checkMonster(monster, player);
 			}
-			else if (e.getSource() == button11)
+			else if (e.getSource() == buttonStart)
 			{
 				if (textName.getText().equals(""))
 				{
@@ -650,35 +654,35 @@ public class GameWindow extends JFrame{
 					chooseClass();
 				}
 			}
-			else if (e.getSource() == button12)
+			else if (e.getSource() == buttonClass1)
 			{
-				game.setClass(player, window, button12.getText());
-				confirmClass(button12.getText(), player);
+				game.setClass(player, window, buttonClass1.getText());
+				confirmClass(buttonClass1.getText(), player);
 			}
-			else if (e.getSource() == button13)
+			else if (e.getSource() == buttonClass2)
 			{
-				game.setClass(player, window, button13.getText());
-				confirmClass(button13.getText(), player);
+				game.setClass(player, window, buttonClass2.getText());
+				confirmClass(buttonClass2.getText(), player);
 			}
-			else if (e.getSource() == button14)
+			else if (e.getSource() == buttonClass3)
 			{
-				game.setClass(player, window, button14.getText());
-				confirmClass(button14.getText(), player);
+				game.setClass(player, window, buttonClass3.getText());
+				confirmClass(buttonClass3.getText(), player);
 			}
-			else if (e.getSource() == button15)
+			else if (e.getSource() == buttonClass4)
 			{
-				game.setClass(player, window, button15.getText());
-				confirmClass(button15.getText(), player);
+				game.setClass(player, window, buttonClass4.getText());
+				confirmClass(buttonClass4.getText(), player);
 			}
-			else if (e.getSource() == button16)
+			else if (e.getSource() == buttonChoose)
 			{
 				startGame();
 			}
-			else if (e.getSource() == button17)
+			else if (e.getSource() == buttonAttack)
 			{
 				attackMonster(monster, player);
 			}
-			else if (e.getSource() == button18)
+			else if (e.getSource() == buttonRun)
 			{
 				runAway(monster, player);
 			}
