@@ -1,4 +1,3 @@
-import java.io.FileReader;
 import java.util.Scanner;
 
 public class Main{
@@ -58,7 +57,7 @@ public class Main{
 		String[] lookArray = new String[Constants.MAX_LOOKS]; 
 		
 		try{
-		    Scanner s = new Scanner(new FileReader(file));
+		    Scanner s = new Scanner(getClass().getResourceAsStream(file));
 		    String strLine;
 		    
 		    //Read File Line By Line
@@ -140,7 +139,7 @@ public class Main{
 		String strLookRoom = "<" + room.getCurrentRoom() + "|" + strItem + ">";
 		String tempString = "";
 		try{
-			Scanner s = new Scanner(new FileReader(file));
+			Scanner s = new Scanner(getClass().getResourceAsStream(file));
 			String strLine = "";
 			
 			while ((strLine = s.nextLine()) != null)
@@ -195,7 +194,7 @@ public class Main{
 			}
 		}
 		try{
-			Scanner s = new Scanner(new FileReader(file));
+			Scanner s = new Scanner(getClass().getResourceAsStream(file));
 			String strLine = "";
 			
 			while ((strLine = s.nextLine()) != null)
@@ -257,7 +256,7 @@ public class Main{
 		int data;
 		try
 		{
-			Scanner s = new Scanner(new FileReader(CHAR_FILE));
+			Scanner s = new Scanner(getClass().getResourceAsStream(CHAR_FILE));
 			String strLine = "";
 			while ((strLine = s.nextLine()) != null)
 			{
@@ -267,6 +266,7 @@ public class Main{
 					s.next();
 					data = s.nextInt();
 					player.setHealth(data);
+					player.setMaxHealth(data);
 					s.next();
 					tempString = s.next();
 					player.setWeapon(tempString);
@@ -276,6 +276,8 @@ public class Main{
 					s.next();
 					data = s.nextInt();
 					player.setRunChance(data);
+					player.setEnergy(Constants.START_ENERGY);
+					player.setMaxEnergy(Constants.START_ENERGY);
 					s.close();
 					return;
 				}
@@ -303,7 +305,7 @@ public class Main{
 		window.setPlayer(player);
 		window.setMain(game);
 		try{
-			Scanner s = new Scanner(new FileReader(Constants.FILE));
+			Scanner s = new Scanner(Main.class.getResourceAsStream(Constants.FILE));
 			s.next();
 			room.setCurrentRoom(s.next());
 			game.getRoomInfo(Constants.FILE, room, window);

@@ -53,6 +53,7 @@ public class GameWindow extends JFrame{
 	JButton button16;
 	JButton button17;
 	JButton button18;
+	JButton buttonHeal;
 	ButtonGroup directionGroup = new ButtonGroup();
 	ButtonGroup classGroup = new ButtonGroup();
 	ButtonGroup actionGroup = new ButtonGroup();
@@ -65,6 +66,7 @@ public class GameWindow extends JFrame{
 	static JLabel label2;
 	static JLabel label3;
 	static JLabel label4;
+	static JLabel label5;
 	static JTextArea textName;
 	static JTextArea textArea1;
 	static JTextArea textArea2 = new JTextArea();
@@ -136,7 +138,11 @@ public class GameWindow extends JFrame{
 			
 		monsterPanel.setLayout(new GridBagLayout());
 		textArea4.setEditable(false);
-		addComp(monsterPanel, textArea4, 0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		addComp(monsterPanel, textArea4, 0, 0, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.NONE);
+		
+		label5 = new JLabel();
+		label5.setVisible(false);
+		addComp(monsterPanel, label5, 0, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE);
 		
 		button17 = new JButton("Attack");
 		ListenForButton lForButtonAttack = new ListenForButton();
@@ -151,7 +157,7 @@ public class GameWindow extends JFrame{
 		button10 = new JButton("OK");
 		ListenForButton lForButtonOK = new ListenForButton();
 		button10.addActionListener(lForButtonOK);
-		addComp(monsterPanel, button10, 0, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		addComp(monsterPanel, button10, 0, 2, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		button10.setVisible(false);
 		
 		thePanel.setLayout(new GridBagLayout());
@@ -184,6 +190,9 @@ public class GameWindow extends JFrame{
 		button9 = new JButton("Status");
 		ListenForButton lForButtonSt = new ListenForButton();
 		button9.addActionListener(lForButtonSt);
+		buttonHeal = new JButton("Heal");
+		ListenForButton lForButtonHeal = new ListenForButton();
+		buttonHeal.addActionListener(lForButtonHeal);
 
 		directionGroup.add(button1);
 		directionGroup.add(button2);
@@ -199,11 +208,13 @@ public class GameWindow extends JFrame{
 		actionBox = Box.createHorizontalBox();
 		actionGroup.add(button5);
 		actionGroup.add(button9);
+		actionGroup.add(buttonHeal);
 		actionBox.add(button5);
 		actionBox.add(button9);
+		actionBox.add(buttonHeal);
 		actionBox.setBorder(BorderFactory.createTitledBorder("Actions"));
 		addComp(thePanel, actionBox, 0, 4, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
-
+		
 		this.add(thePanel);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
@@ -353,9 +364,10 @@ public class GameWindow extends JFrame{
 	
 	public void displayStatus(Player player)
 	{
-		String strPlayer = "Name: " + player.getName() + "\n" +  "Health: " + player.getHealth() + "\n\n" +
-					"Class: " + player.getClassName() + "\n" + "Weapon: " + player.getWeapon() + "\n" + 
-					"Damage: " + player.getDamage() + "\n" + "Run chance: " + player.getRunChance();
+		String strPlayer = "Name: " + player.getName() + "\nHealth: " + player.getHealth() + 
+							"\nEnergy: " + player.getEnergy() + "\n\n" +
+							"Class: " + player.getClassName() + "\nWeapon: " + player.getWeapon() + "\n" + 
+							"Damage: " + player.getDamage() + "\nRun chance: " + player.getRunChance();
 		textArea2.setText(strPlayer);
 		textArea2.setEditable(false);
 		
@@ -371,6 +383,37 @@ public class GameWindow extends JFrame{
 		}
 	}
 	
+	public void checkHeal()
+	{
+		if (player.getEnergy() < 2)
+		{
+			textArea2.setText("You need at least 2 energy to heal!");
+		}
+		else if (player.getHealth() == player.getMaxHealth())
+		{
+			textArea2.setText("You are already at max health!");
+		}
+		else
+		{
+			textArea2.setText("You recover ");
+			if ((player.getMaxHealth() - player.getHealth()) < 30) 
+			{
+				textArea2.append(player.getMaxHealth() - player.getHealth() +" points of health!");
+				player.setHealth(player.getMaxHealth());
+				player.setEnergy(player.getEnergy() - 2);
+			}
+			else
+			{
+				textArea2.append("30 points of health!");
+				player.setHealth(player.getHealth() + 30);
+				player.setEnergy(player.getEnergy() - 2);
+			}
+		}
+		textArea2.setEditable(false);
+		addComp(thePanel, textArea2, 0, 5, 1, 1, 1, 0, GridBagConstraints.SOUTH, GridBagConstraints.NONE);
+		thePanel.updateUI();
+	}
+	
 	public void checkMonster(Monster monster, Player player)
 	{
 		if (monster != null)
@@ -379,6 +422,8 @@ public class GameWindow extends JFrame{
 			{
 				thePanel.setVisible(false);
 				monsterPanel.setVisible(true);
+				label5.setVisible(true);
+				label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
 				button17.setVisible(true);
 				button18.setVisible(true);
 				displayMonsterInRoom(monster, player);
@@ -409,8 +454,12 @@ public class GameWindow extends JFrame{
 			monster.setHealth(monster.getHealth() - player.getDamage());
 			player.setHealth(player.getHealth() - monster.getDamage());
 			textArea4.append(monster.getAttackMessage() + "\n" 
-							+ "You take " + monster.getDamage() + " points of damage.\n"
-							+ "Your health is now " + player.getHealth());
+							+ "You take " + monster.getDamage() + " points of damage.");
+			label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
+			if (player.getEnergy() < player.getMaxEnergy())
+			{
+				player.setEnergy(player.getEnergy() + 1);
+			}
 			if (player.getHealth() < 0)
 			{
 				textArea4.append("\n\nYou are dead.");
@@ -436,8 +485,8 @@ public class GameWindow extends JFrame{
 		{
 			player.setHealth(player.getHealth() - monster.getDamage());
 			textArea4.setText("You failed to run away!\n" + monster.getAttackMessage() + "\n" 
-					+ "You take " + monster.getDamage() + " points of damage.\n"
-					+ "Your health is now " + player.getHealth());
+					+ "You take " + monster.getDamage() + " points of damage.");
+			label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
 			if (player.getHealth() < 0)
 			{
 				textArea4.append("\n\nYou are dead.");
@@ -585,6 +634,10 @@ public class GameWindow extends JFrame{
 				{
 					label3.setText("You did not enter a name.");
 				}
+				else if (textName.getText().length() > 15)
+				{
+					label3.setText("Name must be 15 characters or less");
+				}
 				else
 				{
 					for(int i = 0; i < textName.getText().length(); i++){
@@ -628,6 +681,10 @@ public class GameWindow extends JFrame{
 			else if (e.getSource() == button18)
 			{
 				runAway(monster, player);
+			}
+			else if (e.getSource() == buttonHeal)
+			{
+				checkHeal();
 			}
 			else
 			{

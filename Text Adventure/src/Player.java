@@ -4,8 +4,11 @@ public class Player {
 	private String className;
 	private String weapon;
 	private int health;
+	private int maxHealth;
 	private int damage;
 	private int runChance;
+	private int energy;
+	private int maxEnergy;
 	
 	public String getName() {
 		return name;
@@ -42,6 +45,24 @@ public class Player {
 	}
 	public void setRunChance(int runChance) {
 		this.runChance = runChance;
+	}
+	public int getEnergy() {
+		return energy;
+	}
+	public void setEnergy(int energy) {
+		this.energy = energy;
+	}
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+	public void setMaxHealth(int maxHealth) {
+		this.maxHealth = maxHealth;
+	}
+	public int getMaxEnergy() {
+		return maxEnergy;
+	}
+	public void setMaxEnergy(int maxEnergy) {
+		this.maxEnergy = maxEnergy;
 	}
 
 }
