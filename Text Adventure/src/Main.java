@@ -275,6 +275,9 @@ public class Main{
 					player.setDamage(data);
 					s.next();
 					data = s.nextInt();
+					player.setCriticalChance(data);
+					s.next();
+					data = s.nextInt();
 					player.setRunChance(data);
 					player.setEnergy(Constants.START_ENERGY);
 					player.setMaxEnergy(Constants.START_ENERGY);

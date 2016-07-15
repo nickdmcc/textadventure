@@ -367,7 +367,8 @@ public class GameWindow extends JFrame{
 		String strPlayer = "Name: " + player.getName() + "\nHealth: " + player.getHealth() + 
 							"\nEnergy: " + player.getEnergy() + "\n\n" +
 							"Class: " + player.getClassName() + "\nWeapon: " + player.getWeapon() + "\n" + 
-							"Damage: " + player.getDamage() + "\nRun chance: " + player.getRunChance();
+							"Damage: " + player.getDamage() + "\nCritical chance: " + player.getCriticalChance() +
+							"\nRun chance: " + player.getRunChance();
 		textArea2.setText(strPlayer);
 		textArea2.setEditable(false);
 		
@@ -452,9 +453,17 @@ public class GameWindow extends JFrame{
 		}
 		else
 		{
-			attack = player.attackDamageRange();
+			attack = player.criticalRole(player.attackDamageRange());
 			monsterAttack = monster.attackDamageRange();
-			textArea4.setText(player.getName() + " attacks with a " + player.getWeapon() +  " and deals " + attack + " \n");
+			if (player.isCritical())
+			{
+				textArea4.setText(player.getName() + " attacks with a " + player.getWeapon() +  " and deals " + attack + " \n"
+									+ "Critical damage!\n");
+			}
+			else
+			{	
+				textArea4.setText(player.getName() + " attacks with a " + player.getWeapon() +  " and deals " + attack + " \n");
+			}
 			monster.setHealth(monster.getHealth() - attack);
 			player.setHealth(player.getHealth() - monsterAttack);
 			textArea4.append(monster.getAttackMessage() + "\n" 
@@ -525,6 +534,7 @@ public class GameWindow extends JFrame{
 						+ "Health: " + player.getHealth() +"\n"
 						+ "Weapon: " + player.getWeapon() +"\n"
 						+ "Damage: " + player.getDamage() + "\n"
+						+ "Critical chance: " + player.getCriticalChance() + "\n"
 						+ "Run chance: " + player.getRunChance());
 		buttonChoose.setVisible(true);
 	}
