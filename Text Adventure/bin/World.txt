@@ -31,7 +31,7 @@ There is only one door to the east where you came. *
 A beautiful fountain stands erected in the middle of the room.  It kinda makes you thirsty. *
 
 <Left|slime>
-<Health> 50
+<Health> 100
 <Damage> 10
 The slime squirts at you. *
 
@@ -45,7 +45,7 @@ Your only option is to go back inside and get them out of here! *
 <south> None
 <west>  None
 <look>  0
-<enemy> None
+<enemy> 
 
 <Right>
 As you pass through the door you feel a chill run
@@ -63,8 +63,8 @@ There is no where to go but back to the west. *
 You squint your eyes towards the corner where the mysterious entity resides...  Nothing moves. *
 
 <Right|goblin>
-<Health> 160
-<Damage> 14
+<Health> 110
+<Damage> 9
 The goblin claws your face. *
 
 <Top>
@@ -76,7 +76,12 @@ One door is to the south and one is to the north up a [stairwell]. *
 <south> Middle
 <west>  None
 <look>  1 stairwell
-<enemy> None
+<enemy> zombie
+
+<Top|zombie>
+<Health> 200
+<Damage> 15
+The zombie punches you. *
 
 <Top|stairwell>
 This is the only place where your friend could be.  You'd best go up it, carefully. *
@@ -102,6 +107,6 @@ Your friend seems to be pleading with you in the chair to run.  You have never s
 The wooden chair holds your friend tightly, with ropes seemingly strangling the body that is tied to it. *
 
 <End|troll>
-<Health> 202
+<Health> 220
 <Damage> 19
 The troll bashes your side with his club. *

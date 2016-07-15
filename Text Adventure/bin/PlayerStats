@@ -1,23 +1,27 @@
 <Guard>
-<health> 300 
+<health> 230 
 <weapon> polearm
-<damage> 21
+<damage> 16
+<critical> 10
 <run> 20
 
 <Assassin>
-<health> 165
+<health> 130
 <weapon> ninja-stars
-<damage> 35
+<damage> 27
+<critical> 25
 <run> 45
 
 <Bandit>
-<health> 200
+<health> 170
 <weapon> dagger
-<damage> 28
+<damage> 19
+<critical> 20
 <run> 30
 
 <Fighter>
-<health> 265
+<health> 180
 <weapon> sword
-<damage> 24
+<damage> 17
+<critical> 15
 <run> 20
