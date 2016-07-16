@@ -14,7 +14,7 @@ public class Main{
 	 * @param room
 	 * @param strRoom
 	 */
-	public void move(Room room, String strRoom, GameWindow window, Player player)
+	public void move(Room room, String strRoom, GameWindow window, PlayerClass player)
 	{
 		if ((room.getRoomEast().equals("None") && room.getRoomNorth().equals("None") && room.getRoomSouth().equals("None") && room.getRoomWest().equals("None")))
 		{
@@ -39,7 +39,7 @@ public class Main{
 		getRoomInfo(Constants.FILE, room, window);
 		window.displayRoom(room);
 		window.setMonster(monster[k]);
-		window.checkMonster(monster[k], player);
+		window.checkMonster(monster[k]);
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class Main{
 		    }
 	}
 	
-	public void setClass(Player player, GameWindow window, String className)
+	public void setClass(PlayerClass player, GameWindow window, String className)
 	{
 		String strClassName = "<" + className + ">";
 		String tempString;
@@ -301,7 +301,7 @@ public class Main{
 		Main game = new Main();
 		GameWindow window = new GameWindow();
 		Room room = new Room();
-		Player player = new Player();
+		PlayerClass player = new PlayerClass();
 		window.setPlayerName();
 		window.setRoom(room);
 		window.setGameWindow(window);

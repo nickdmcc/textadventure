@@ -3,7 +3,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -24,10 +23,14 @@ import javax.swing.JTextArea;
 public class GameWindow extends JFrame{
 	
 	public Monster monster = new Monster();
+	public Guard guard;
+	public Assassin assassin;
+	public Bandit bandit;
+	public Fighter fighter;
 	
 	public GameWindow window;
 	public Main game;
-	public Player player;
+	public PlayerClass player;
 	public Room room;
 	
 	static JPanel thePanel = new JPanel();
@@ -368,14 +371,28 @@ public class GameWindow extends JFrame{
 		}
 	}
 	
-	public void displayStatus(Player player)
+	public void displayStatus(PlayerClass player)
 	{
-		String strPlayer = "Name: " + player.getName() + "\nHealth: " + player.getHealth() + 
-							"\nEnergy: " + player.getEnergy() + "\n\n" +
-							"Class: " + player.getClassName() + "\nWeapon: " + player.getWeapon() + "\n" + 
-							"Damage: " + player.getDamage() + "\nCritical chance: " + player.getCriticalChance() +
-							"\nRun chance: " + player.getRunChance();
-		textArea2.setText(strPlayer);
+		if (guard != null)
+		{
+			textArea2.setText(guard.getStatus());
+		}
+		else if (assassin != null)
+		{
+			textArea2.setText(assassin.getStatus());
+		}
+		else if (bandit != null)
+		{
+			textArea2.setText(bandit.getStatus());
+		}
+		else if (fighter != null)
+		{
+			textArea2.setText(fighter.getStatus());
+		}
+		else
+		{
+
+		}
 		textArea2.setEditable(false);
 		
 		addComp(thePanel, textArea2, 0, 5, 1, 1, 1, 0, GridBagConstraints.SOUTH, GridBagConstraints.NONE);
@@ -392,189 +409,100 @@ public class GameWindow extends JFrame{
 	
 	public void checkHeal()
 	{
-		if (player.getEnergy() < 2)
+		if (guard != null)
 		{
-			textArea2.setText("You need at least 2 energy to heal!");
+			textArea2.setText(guard.heal());
 		}
-		else if (player.getHealth() == player.getMaxHealth())
+		else if (assassin != null)
 		{
-			textArea2.setText("You are already at max health!");
+			textArea2.setText(assassin.heal());
+		}
+		else if (bandit != null)
+		{
+			textArea2.setText(bandit.heal());
+		}
+		else if (fighter != null)
+		{
+			textArea2.setText(fighter.heal());
 		}
 		else
 		{
-			textArea2.setText("You recover ");
-			if ((player.getMaxHealth() - player.getHealth()) < 30) 
-			{
-				textArea2.append(player.getMaxHealth() - player.getHealth() +" points of health!");
-				player.setHealth(player.getMaxHealth());
-				player.setEnergy(player.getEnergy() - 2);
-			}
-			else
-			{
-				textArea2.append("30 points of health!");
-				player.setHealth(player.getHealth() + 30);
-				player.setEnergy(player.getEnergy() - 2);
-			}
+
 		}
 		textArea2.setEditable(false);
 		addComp(thePanel, textArea2, 0, 5, 1, 1, 1, 0, GridBagConstraints.SOUTH, GridBagConstraints.NONE);
 		thePanel.updateUI();
 	}
 	
-	public void checkSkill1(Player player, Monster monster)
+	public void checkSkill1(PlayerClass player, Monster monster)
 	{
-		int attack = 0;
-		int monsterAttack = 0;
-		String className = player.getClassName();
-		if (className.equals("Guard") && player.getEnergy() > 4)
+		if (guard != null)
 		{
-			attack = (int) Math.round(player.criticalRole(player.attackDamageRange()) * 1.3);
-			monsterAttack = monster.attackDamageRange() / 2;
-			if (player.isCritical())
-			{
-				textArea4.setText(player.getName() + " attacks with a Shield Ram and deals " + attack + " damage\n"
-									+ "Critical damage!\n");
-			}
-			else
-			{	
-				textArea4.setText(player.getName() + " attacks with a Shield Ram and deals " + attack + " damage\n");
-			}
-			monster.setHealth(monster.getHealth() - attack);
-			if (monster.getHealth() > 0)
-			{
-				player.setHealth(player.getHealth() - monsterAttack);
-				textArea4.append(monster.getAttackMessage() + "\n" 
-								+ "You take " + monsterAttack + " points of collateral damage.");
-			}
-			if (player.getHealth() <= 0)
+			guard.skill1(monster);
+			textArea4.setText(guard.getAttackMessage());
+			textArea4.append(guard.getMonsterAttackMessage());
+			
+			if (guard.getHealth() <= 0)
 			{
 				textArea4.append("\n\nYou are dead.");
 				buttonAttack.setVisible(false);
 				buttonSkill1.setVisible(false);
 				buttonRun.setVisible(false);
-			}
-			else if (player.getEnergy() > 4)
-			{
-				player.setEnergy(player.getEnergy() - 5);
-			}
-			else
-			{
-				player.setEnergy(0);
-			}
-			label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
-		}
-		else if (className.equals("Assassin") && player.getEnergy() > 4)
-		{
-			attack = player.criticalRole(player.attackDamageRange());
-			monsterAttack = monster.attackDamageRange();
-			if (player.isCritical())
-			{
-				textArea4.setText(player.getName() + " uses Perfect Strike! You land a critical dealing " + attack + " \n"
-									+ "Critical damage!\n");
-			}
-			else
-			{	
-				textArea4.setText(player.getName() + " uses Perfect Strike! You land a critical dealing " + (attack * 2) + " \n"
-						+ "Critical damage!\n");			}
-			monster.setHealth(monster.getHealth() - attack);
-			if (monster.getHealth() > 0)
-			{
-				player.setHealth(player.getHealth() - monsterAttack);
-				textArea4.append(monster.getAttackMessage() + "\n" 
-								+ "You take " + monsterAttack + " points of damage.");
 			}
 			
-			if (player.getHealth() <= 0)
-			{
-				textArea4.append("\n\nYou are dead.");
-				buttonAttack.setVisible(false);
-				buttonSkill1.setVisible(false);
-				buttonRun.setVisible(false);
-			}
-			else if (player.getEnergy() > 4)
-			{
-				player.setEnergy(player.getEnergy() - 5);
-			}
-			else
-			{
-				player.setEnergy(0);
-			}
-			label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
+			label5.setText("   Health: " + guard.getHealth() + "    " + "Energy: " + guard.getEnergy());
 		}
-		else if (className.equals("Bandit") && player.getEnergy() > 4)
+		else if (assassin != null)
 		{
-			attack = player.criticalRole(player.attackDamageRange());
-			monsterAttack = monster.attackDamageRange();
-			if (player.isCritical())
-			{
-				textArea4.setText(player.getName() + " performs Shadow Step. You deal " + attack + " damage\n"
-									+ "Critical damage!\n");
-			}
-			else
-			{	
-				textArea4.setText(player.getName() + " peforms Shadow Step. You deal " + attack + " damage\n");
-			}
-			monster.setHealth(monster.getHealth() - attack);
-			textArea4.append( "You avoid the enemy's attack!");
-			if (player.getHealth() <= 0)
+			assassin.skill1(monster);
+			textArea4.setText(assassin.getAttackMessage());
+			textArea4.append(assassin.getMonsterAttackMessage());
+			
+			if (assassin.getHealth() <= 0)
 			{
 				textArea4.append("\n\nYou are dead.");
 				buttonAttack.setVisible(false);
 				buttonSkill1.setVisible(false);
 				buttonRun.setVisible(false);
 			}
-			else if (player.getEnergy() > 4)
-			{
-				player.setEnergy(player.getEnergy() - 5);
-			}
-			else
-			{
-				player.setEnergy(0);
-			}
-			label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
+			
+			label5.setText("   Health: " + assassin.getHealth() + "    " + "Energy: " + assassin.getEnergy());
 		}
-		else if (className.equals("Fighter") && player.getEnergy() > 4)
+		else if (bandit != null)
 		{
-			attack = (int) Math.round(player.criticalRole(player.attackDamageRange()) * .7);
-			attack += (int) Math.round(player.criticalRole(player.attackDamageRange()) * .7);
-			attack += (int) Math.round(player.criticalRole(player.attackDamageRange()) * .7);
-			monsterAttack = monster.attackDamageRange();
-			if (player.isCritical())
-			{
-				textArea4.setText(player.getName() + " uses Triple Slash and deals " + attack + " damage\n"
-									+ "Critical damage!\n");
-			}
-			else
-			{	
-				textArea4.setText(player.getName() + " uses Triple Slash and deals " + attack + " damage\n");
-			}
-			monster.setHealth(monster.getHealth() - attack);
-			if (monster.getHealth() > 0)
-			{
-				player.setHealth(player.getHealth() - monsterAttack);
-				textArea4.append(monster.getAttackMessage() + "\n" 
-								+ "You take " + monsterAttack + " points of damage.");
-			}
-			if (player.getHealth() <= 0)
+			bandit.skill1(monster);
+			textArea4.setText(bandit.getAttackMessage());
+			textArea4.append(bandit.getMonsterAttackMessage());
+			
+			if (bandit.getHealth() <= 0)
 			{
 				textArea4.append("\n\nYou are dead.");
 				buttonAttack.setVisible(false);
 				buttonSkill1.setVisible(false);
 				buttonRun.setVisible(false);
 			}
-			else if (player.getEnergy() > 4)
+			
+			label5.setText("   Health: " + bandit.getHealth() + "    " + "Energy: " + bandit.getEnergy());
+		}
+		else if (fighter != null)
+		{
+			fighter.skill1(monster);
+			textArea4.setText(fighter.getAttackMessage());
+			textArea4.append(fighter.getMonsterAttackMessage());
+			
+			if (fighter.getHealth() <= 0)
 			{
-				player.setEnergy(player.getEnergy() - 5);
+				textArea4.append("\n\nYou are dead.");
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
 			}
-			else
-			{
-				player.setEnergy(0);
-			}
-			label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());	
+			
+			label5.setText("   Health: " + fighter.getHealth() + "    " + "Energy: " + fighter.getEnergy());
 		}
 		else
 		{
-			textArea4.setText("You don't have enough energy!");
+			
 		}
 		if (monster.getHealth() <= 0)
 		{
@@ -587,7 +515,7 @@ public class GameWindow extends JFrame{
 		}
 	}
 	
-	public void checkMonster(Monster monster, Player player)
+	public void checkMonster(Monster monster)
 	{
 		if (monster != null)
 		{
@@ -596,35 +524,35 @@ public class GameWindow extends JFrame{
 				thePanel.setVisible(false);
 				monsterPanel.setVisible(true);
 				label5.setVisible(true);
-				label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
-				if (player.getClassName().equals("Guard"))
+
+				if (guard != null)
 				{
 					buttonSkill1.setText("Shield Ram");
-
+					label5.setText("   Health: " + guard.getHealth() + "    " + "Energy: " + guard.getEnergy());
 				}
-				else if (player.getClassName().equals("Assassin"))
+				else if (assassin != null)
 				{
 					buttonSkill1.setText("Perfect Strike");
-
+					label5.setText("   Health: " + assassin.getHealth() + "    " + "Energy: " + assassin.getEnergy());
 				}
-				else if (player.getClassName().equals("Bandit"))
+				else if (bandit != null)
 				{
 					buttonSkill1.setText("Shadow Step");
-
+					label5.setText("   Health: " + bandit.getHealth() + "    " + "Energy: " + bandit.getEnergy());
 				}
-				else if (player.getClassName().equals("Fighter"))
+				else if (fighter != null)
 				{
 					buttonSkill1.setText("Triple Slash");
-
+					label5.setText("   Health: " + fighter.getHealth() + "    " + "Energy: " + fighter.getEnergy());
 				}
 				else
 				{
-					buttonSkill1.setText("Error");
+					
 				}
 				buttonAttack.setVisible(true);
 				buttonSkill1.setVisible(true);
 				buttonRun.setVisible(true);
-				displayMonsterInRoom(monster, player);
+				displayMonsterInRoom(monster);
 			}
 			
 			else
@@ -636,72 +564,17 @@ public class GameWindow extends JFrame{
 		
 	}
 	
-	public void attackMonster(Monster monster, Player player)
+	public void attackMonster(Monster monster)
 	{	
-		int attack = 0;
-		int monsterAttack = 0;
-		
-		attack = player.criticalRole(player.attackDamageRange());
-		monsterAttack = monster.attackDamageRange();
-		if (player.isCritical())
+		if (guard != null)
 		{
-			textArea4.setText(player.getName() + " attacks with a " + player.getWeapon() +  " and deals " + attack + " \n"
-								+ "Critical damage!\n");
-		}
-		else
-		{	
-			textArea4.setText(player.getName() + " attacks with a " + player.getWeapon() +  " and deals " + attack + " \n");
-		}
-		monster.setHealth(monster.getHealth() - attack);
-		if (monster.getHealth() > 0)
-		{
-			player.setHealth(player.getHealth() - monsterAttack);
-			textArea4.append(monster.getAttackMessage() + "\n" 
-							+ "You take " + monsterAttack + " points of damage.");
-		}
-		if (player.getEnergy() < player.getMaxEnergy())
-		{
-			player.setEnergy(player.getEnergy() + 1);
-		}
-		label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
-		if (player.getHealth() <= 0)
-		{
-			textArea4.append("\n\nYou are dead.");
-			buttonAttack.setVisible(false);
-			buttonSkill1.setVisible(false);
-			buttonRun.setVisible(false);
-		}
-		if (monster.getHealth() <= 0)
-		{
-			textArea4.append("\nThe " + monster.getName() + " has been killed.\n");
-			monster.setMonsterInRoom(false);
-			buttonOk.setVisible(true);
-			buttonAttack.setVisible(false);
-			buttonSkill1.setVisible(false);
-			buttonRun.setVisible(false);
-		}
-	}
-	
-	public void runAway(Monster monster, Player player)
-	{
-		Random random = new Random();
-		int chance = random.nextInt(100);
-		if (chance <= player.getRunChance())
-		{
-			textArea4.setText("You escape from the " + monster.getName() + "!");
-			monster.setMonsterInRoom(false);
-			buttonAttack.setVisible(false);
-			buttonSkill1.setVisible(false);
-			buttonRun.setVisible(false);
-			buttonOk.setVisible(true);
-		}
-		else
-		{
-			player.setHealth(player.getHealth() - monster.getDamage());
-			textArea4.setText("You failed to run away!\n" + monster.getAttackMessage() + "\n" 
-					+ "You take " + monster.getDamage() + " points of damage.");
-			label5.setText("   Health: " + player.getHealth() + "    " + "Energy: " + player.getEnergy());
-			if (player.getHealth() < 0)
+			int attack = guard.criticalRole(guard.attackDamageRange());
+			int monsterAttack = monster.attackDamageRange();
+
+			textArea4.setText(guard.getAttackMessage(monster, attack));
+			textArea4.append(monster.monsterBattleMessage(guard, monsterAttack));
+			label5.setText("   Health: " + guard.getHealth() + "    " + "Energy: " + guard.getEnergy());
+			if (guard.getHealth() <= 0)
 			{
 				textArea4.append("\n\nYou are dead.");
 				buttonAttack.setVisible(false);
@@ -709,9 +582,150 @@ public class GameWindow extends JFrame{
 				buttonRun.setVisible(false);
 			}
 		}
+		else if (assassin != null)
+		{
+			int attack = assassin.criticalRole(assassin.attackDamageRange());
+			int monsterAttack = monster.attackDamageRange();
+
+			textArea4.setText(assassin.getAttackMessage(monster, attack));
+			textArea4.append(monster.monsterBattleMessage(assassin, monsterAttack));
+			label5.setText("   Health: " + assassin.getHealth() + "    " + "Energy: " + assassin.getEnergy());
+			if (assassin.getHealth() <= 0)
+			{
+				textArea4.append("\n\nYou are dead.");
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+			}
+		}
+		else if (bandit != null)
+		{
+			int attack = bandit.criticalRole(bandit.attackDamageRange());
+			int monsterAttack = monster.attackDamageRange();
+
+			textArea4.setText(bandit.getAttackMessage(monster, attack));
+			textArea4.append(monster.monsterBattleMessage(bandit, monsterAttack));
+			label5.setText("   Health: " + bandit.getHealth() + "    " + "Energy: " + bandit.getEnergy());
+			if (bandit.getHealth() <= 0)
+			{
+				textArea4.append("\n\nYou are dead.");
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+			}
+		}
+		else if (fighter != null)
+		{
+			int attack = fighter.criticalRole(fighter.attackDamageRange());
+			int monsterAttack = monster.attackDamageRange();
+
+			textArea4.setText(fighter.getAttackMessage(monster, attack));
+			textArea4.append(monster.monsterBattleMessage(fighter, monsterAttack));
+			label5.setText("   Health: " + fighter.getHealth() + "    " + "Energy: " + fighter.getEnergy());
+			if (fighter.getHealth() <= 0)
+			{
+				textArea4.append("\n\nYou are dead.");
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+			}
+		}
+		else
+		{
+			
+		}
+		if (monster.getHealth() <= 0)
+		{
+			monster.setMonsterInRoom(false);
+			buttonOk.setVisible(true);
+			buttonAttack.setVisible(false);
+			buttonSkill1.setVisible(false);
+			buttonRun.setVisible(false);
+		}
 	}
 	
-	public void displayMonsterInRoom(Monster monster, Player player)
+	public void run(Monster monster)
+	{
+		if (guard != null)
+		{
+			textArea4.setText(guard.runAway(monster));
+			label5.setText("   Health: " + guard.getHealth() + "    " + "Energy: " + guard.getEnergy());
+			if (guard.isEscape())
+			{
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+				buttonOk.setVisible(true);
+			}
+			if (guard.getHealth() < 0)
+			{
+				textArea4.append("\n\nYou are dead.");
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+			}
+		}
+		else if (assassin != null)
+		{
+			textArea4.setText(assassin.runAway(monster));
+			label5.setText("   Health: " + assassin.getHealth() + "    " + "Energy: " + assassin.getEnergy());
+			if (assassin.isEscape())
+			{
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+				buttonOk.setVisible(true);
+			}
+			if (assassin.getHealth() < 0)
+			{
+				textArea4.append("\n\nYou are dead.");
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+			}
+		}
+		else if (bandit != null)
+		{
+			textArea4.setText(bandit.runAway(monster));
+			label5.setText("   Health: " + bandit.getHealth() + "    " + "Energy: " + bandit.getEnergy());
+			if (bandit.isEscape())
+			{
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+				buttonOk.setVisible(true);
+			}
+			if (bandit.getHealth() < 0)
+			{
+				textArea4.append("\n\nYou are dead.");
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+			}
+		}
+		else if (fighter != null)
+		{
+			textArea4.setText(fighter.runAway(monster));
+			label5.setText("   Health: " + fighter.getHealth() + "    " + "Energy: " + fighter.getEnergy());
+			if (fighter.isEscape())
+			{
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+				buttonOk.setVisible(true);
+			}
+			if (fighter.getHealth() < 0)
+			{
+				textArea4.append("\n\nYou are dead.");
+				buttonAttack.setVisible(false);
+				buttonSkill1.setVisible(false);
+				buttonRun.setVisible(false);
+			}
+		}
+		
+	}
+	
+	public void displayMonsterInRoom(Monster monster)
 	{
 		this.add(monsterPanel);
 		textArea4.append("Oh no! A " + monster.getName() + " has appeared!\n\n");	
@@ -729,7 +743,7 @@ public class GameWindow extends JFrame{
 		this.add(classPanel);
 	}
 	
-	public void confirmClass(String className, Player player)
+	public void confirmClass(String className, PlayerClass player)
 	{
 		textArea5.setVisible(true);
 		textArea5.setText("Are you sure you want to be a " + className +"?\n"
@@ -744,6 +758,27 @@ public class GameWindow extends JFrame{
 	
 	public void startGame()
 	{
+		if (player.getClassName().equals("Guard"))
+		{
+			guard = new Guard(player.getName(), player.getWeapon(), player.getClassName(), player.getHealth(), player.getMaxHealth(), player.getDamage(), player.getCriticalChance(), player.getRunChance());
+		}
+		else if (player.getClassName().equals("Assassin"))
+		{
+			assassin = new Assassin(player.getName(), player.getWeapon(), player.getClassName(), player.getHealth(), player.getMaxHealth(), player.getDamage(), player.getCriticalChance(), player.getRunChance());
+		}
+		else if (player.getClassName().equals("Bandit"))
+		{
+			bandit = new Bandit(player.getName(), player.getWeapon(), player.getClassName(), player.getHealth(), player.getMaxHealth(), player.getDamage(), player.getCriticalChance(), player.getRunChance());
+		}
+		else if (player.getClassName().equals("Fighter"))
+		{
+			fighter = new Fighter(player.getName(), player.getWeapon(), player.getClassName(), player.getHealth(), player.getMaxHealth(), player.getDamage(), player.getCriticalChance(), player.getRunChance());
+		}
+		else
+		{
+			
+		}
+		player = null;
 		classPanel.setVisible(false);
 		thePanel.setVisible(true);
 	}
@@ -763,7 +798,7 @@ public class GameWindow extends JFrame{
 		this.game = game;
 	}
 	
-	public void setPlayer(Player player)
+	public void setPlayer(PlayerClass player)
 	{
 		this.player = player;
 	}
@@ -843,7 +878,7 @@ public class GameWindow extends JFrame{
 			{
 				buttonOk.setVisible(false);
 				textArea4.setText("");
-				checkMonster(monster, player);
+				checkMonster(monster);
 			}
 			else if (e.getSource() == buttonStart)
 			{
@@ -893,11 +928,11 @@ public class GameWindow extends JFrame{
 			}
 			else if (e.getSource() == buttonAttack)
 			{
-				attackMonster(monster, player);
+				attackMonster(monster);
 			}
 			else if (e.getSource() == buttonRun)
 			{
-				runAway(monster, player);
+				run(monster);
 			}
 			else if (e.getSource() == buttonHeal)
 			{

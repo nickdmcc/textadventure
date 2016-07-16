@@ -39,6 +39,24 @@ public class Monster {
 		this.monsterInRoom = monsterInRoom;
 	}
 	
+	public String monsterBattleMessage(PlayerClass player, int attack)
+	{
+		String message = "";
+				
+		if (this.getHealth() > 0)
+		{
+			player.setHealth(player.getHealth() - attack);
+			message = (this.getAttackMessage() + "\n" 
+							+ "You take " + attack + " points of damage.");
+		}
+		else
+		{
+			message = ("\nThe " + this.getName() + " has been killed.\n");
+		}
+		
+		return message;
+	}
+	
 	public int attackDamageRange()
 	{
 		Random random = new Random();

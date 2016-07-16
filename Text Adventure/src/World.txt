@@ -45,7 +45,7 @@ Your only option is to go back inside and get them out of here! *
 <south> None
 <west>  None
 <look>  0
-<enemy> 
+<enemy> None
 
 <Right>
 As you pass through the door you feel a chill run
