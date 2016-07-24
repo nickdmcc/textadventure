@@ -14,7 +14,7 @@ public class PlayerClass {
 	private int runChance;
 	private int energy;
 	private int maxEnergy;
-	
+		
 	public String getName() {
 		return name;
 	}
@@ -158,5 +158,6 @@ public class PlayerClass {
 		
 		return runMessage;
 	}
+
 
 }

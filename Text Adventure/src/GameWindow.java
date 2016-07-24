@@ -7,11 +7,14 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 /**
@@ -21,6 +24,10 @@ import javax.swing.JTextArea;
  */
 @SuppressWarnings("serial")
 public class GameWindow extends JFrame{
+	
+	private boolean middleRoomPotion = true;
+	private boolean bottomRoomKey = true;
+	private boolean topDoorLocked = true;
 	
 	public Monster monster = new Monster();
 	public Guard guard;
@@ -37,6 +44,7 @@ public class GameWindow extends JFrame{
 	static JPanel monsterPanel = new JPanel();
 	static JPanel classPanel = new JPanel();
 	static JPanel startPanel = new JPanel();
+	static JPanel itemsPanel = new JPanel();
 	
 	JButton buttonNorth;
 	JButton buttonEast;
@@ -45,10 +53,13 @@ public class GameWindow extends JFrame{
 	JButton buttonView;
 	JButton buttonStatus;
 	JButton buttonHeal;
+	JButton buttonItems;
 	JButton buttonItem1;
 	JButton buttonItem2;
 	JButton buttonItem3;
 	JButton buttonOk;
+	JButton buttonItemUse;
+	JButton buttonItemCancel;
 	JButton buttonStart;
 	JButton buttonClass1;
 	JButton buttonClass2;
@@ -62,15 +73,22 @@ public class GameWindow extends JFrame{
 	ButtonGroup classGroup = new ButtonGroup();
 	ButtonGroup actionGroup = new ButtonGroup();
 	ButtonGroup itemGroup = new ButtonGroup();
+	ButtonGroup itemListGroup = new ButtonGroup();
 	Box directionBox;
 	Box classBox;
 	Box actionBox;
 	Box itemBox;
+	Box itemListBox;
+	JList<Object> items = new JList<Object>();
+	@SuppressWarnings("rawtypes")
+	DefaultListModel model = new DefaultListModel<Object>();
+	JScrollPane scroller;
 	static JLabel label1;
 	static JLabel label2;
 	static JLabel label3;
 	static JLabel label4;
 	static JLabel label5;
+	static JLabel label6;
 	static JTextArea textName;
 	static JTextArea textArea1;
 	static JTextArea textArea2 = new JTextArea();
@@ -139,6 +157,26 @@ public class GameWindow extends JFrame{
 		buttonChoose.addActionListener(lForButtonChoose); 
 		buttonChoose.setVisible(false);
 		addComp(classPanel, buttonChoose, 0, 3, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		itemsPanel.setLayout(new GridBagLayout());
+		
+		itemListBox = Box.createHorizontalBox();
+
+		buttonItemUse = new JButton("Use");
+		ListenForButton lForButtonItemUse = new ListenForButton();
+		buttonItemUse.addActionListener(lForButtonItemUse); 	
+		buttonItemCancel = new JButton("Cancel");
+		ListenForButton lForButtonItemCancel = new ListenForButton();
+		buttonItemCancel.addActionListener(lForButtonItemCancel); 
+		
+		itemListGroup.add(buttonItemUse);
+		itemListGroup.add(buttonItemCancel);
+		itemListBox.add(buttonItemUse);
+		itemListBox.add(buttonItemCancel);
+		addComp(itemsPanel, itemListBox, 0, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
+		
+		label6 = new JLabel("");
+		addComp(itemsPanel, label6, 0, 2, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 			
 		monsterPanel.setLayout(new GridBagLayout());
 		textArea4.setEditable(false);
@@ -202,6 +240,9 @@ public class GameWindow extends JFrame{
 		buttonHeal = new JButton("Heal");
 		ListenForButton lForButtonHeal = new ListenForButton();
 		buttonHeal.addActionListener(lForButtonHeal);
+		buttonItems = new JButton("Items");
+		ListenForButton lForButtonItems = new ListenForButton();
+		buttonItems.addActionListener(lForButtonItems);
 
 		directionGroup.add(buttonNorth);
 		directionGroup.add(buttonEast);
@@ -218,9 +259,11 @@ public class GameWindow extends JFrame{
 		actionGroup.add(buttonView);
 		actionGroup.add(buttonStatus);
 		actionGroup.add(buttonHeal);
+		actionGroup.add(buttonItems);
 		actionBox.add(buttonView);
 		actionBox.add(buttonStatus);
 		actionBox.add(buttonHeal);
+		actionBox.add(buttonItems);
 		actionBox.setBorder(BorderFactory.createTitledBorder("Actions"));
 		addComp(thePanel, actionBox, 0, 4, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		
@@ -359,7 +402,7 @@ public class GameWindow extends JFrame{
 		textArea2.setText(strLookDescription);
 		textArea2.setEditable(false);
 		
-		addComp(thePanel, textArea2, 0, 2, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
+		addComp(thePanel, textArea2, 0, 2, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);
 		thePanel.updateUI();
 	}
 	
@@ -432,6 +475,167 @@ public class GameWindow extends JFrame{
 		textArea2.setEditable(false);
 		addComp(thePanel, textArea2, 0, 5, 1, 1, 1, 0, GridBagConstraints.SOUTH, GridBagConstraints.NONE);
 		thePanel.updateUI();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void checkItems()
+	{
+		thePanel.setVisible(false);
+		label6.setText("");
+		this.add(itemsPanel);
+		itemsPanel.setVisible(true);
+		items.setModel(model);
+		model = (DefaultListModel<Object>) items.getModel();
+		scroller = new JScrollPane(items, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		items.setFixedCellHeight(30);
+		items.setFixedCellWidth(150);
+		addComp(itemsPanel, scroller, 0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE);		
+	}
+	
+	public void useItem()
+	{
+		int selectedIndex = items.getSelectedIndex();
+		if (!model.isEmpty() && selectedIndex != -1)
+		{
+			if (model.elementAt(selectedIndex).equals("Key"))
+			{
+				if (room.getCurrentRoom().equals("Top"))
+				{
+					model.removeElement("Key");
+					label6.setText("You unlocked the North door!");
+					topDoorLocked = false;
+				}
+				else
+				{
+					label6.setText("There are no locked doors nearby!");
+				}
+			}
+			
+			else if (guard != null)
+			{
+				if (model.elementAt(selectedIndex).equals("Potion"))
+				{
+					model.removeElement("Potion");
+					if (guard.getHealth() + 50 > guard.getMaxHealth())
+					{
+						guard.setHealth(guard.getMaxHealth());
+						label6.setText("You are fully restored!");
+					}
+					else
+					{
+						guard.setHealth(guard.getHealth() + 50);
+						label6.setText("You restore 50 health!");
+					}
+					
+				}
+				else if (model.elementAt(selectedIndex).equals("Energy Drink"))
+				{
+					model.removeElement("Energy Drink");
+				}
+				
+			}
+			else if (assassin != null)
+			{
+				if (items.getSelectedValue().equals("Potion"))
+				{
+					model.removeElement("Potion");
+					if (assassin.getHealth() + 50 > assassin.getMaxHealth())
+					{
+						assassin.setHealth(assassin.getMaxHealth());
+						label6.setText("You are fully restored!");
+					}
+					else
+					{
+						assassin.setHealth(assassin.getHealth() + 50);
+						label6.setText("You restore 50 health!");
+					}
+				}
+				else if (items.getSelectedValue().equals("Energy Drink"))
+				{
+					model.removeElement("Energy Drink");
+				}
+				
+			}
+			else if (bandit != null)
+			{
+				if (items.getSelectedValue().equals("Potion"))
+				{
+					model.removeElement("Potion");
+					if (bandit.getHealth() + 50 > bandit.getMaxHealth())
+					{
+						bandit.setHealth(bandit.getMaxHealth());
+						label6.setText("You are fully restored!");
+					}
+					else
+					{
+						bandit.setHealth(bandit.getHealth() + 50);
+						label6.setText("You restore 50 health!");
+					}
+				}
+				else if (items.getSelectedValue().equals("Energy Drink"))
+				{
+					model.removeElement("Energy Drink");
+				}
+
+			}
+			else if (fighter != null)
+			{
+				if (items.getSelectedValue().equals("Potion"))
+				{
+					model.removeElement("Potion");
+					if (fighter.getHealth() + 50 > fighter.getMaxHealth())
+					{
+						fighter.setHealth(fighter.getMaxHealth());
+						label6.setText("You are fully restored!");
+					}
+					else
+					{
+						fighter.setHealth(fighter.getHealth() + 50);
+						label6.setText("You restore 50 health!");
+					}
+				}
+				else if (items.getSelectedValue().equals("Energy Drink"))
+				{
+					model.removeElement("Energy Drink");
+				}
+
+			}
+			
+		}
+	}
+	
+	public void cancel()
+	{
+		itemsPanel.setVisible(false);
+		thePanel.setVisible(true);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void gainItem()
+	{
+		if (room.getCurrentRoom().equals("Middle") && (buttonItem1 != null))
+		{
+			if (buttonItem1.getText().equals("window") && middleRoomPotion)
+			{
+				middleRoomPotion = false;
+				model.addElement("Potion");
+				textArea2.append(" You found a potion!");
+				thePanel.updateUI();
+			}
+			else
+			{
+				
+			}
+		}
+		
+		else if (room.getCurrentRoom().equals("Bottom") && bottomRoomKey)
+		{
+			bottomRoomKey = false;
+			model.addElement("Key");
+			displayLook("You found a key!");
+			thePanel.updateUI();
+		}
+		
 	}
 	
 	public void checkSkill1(PlayerClass player, Monster monster)
@@ -731,6 +935,21 @@ public class GameWindow extends JFrame{
 		textArea4.append("Oh no! A " + monster.getName() + " has appeared!\n\n");	
 	}
 	
+	public void checkLockedRoom()
+	{
+		if (room.getCurrentRoom().equals("Top"))
+		{
+			if (!topDoorLocked)
+				game.move(room, room.getRoomNorth(), window, player);
+			else
+				displayLook("The door is locked!");
+		}
+		else if (!room.getCurrentRoom().equals("Top"))
+		{
+			game.move(room, room.getRoomNorth(), window, player);
+		}
+	}
+	
 	public void setPlayerName()
 	{
 		thePanel.setVisible(false);
@@ -816,6 +1035,7 @@ public class GameWindow extends JFrame{
 	private class ListenForButton implements ActionListener
 	{
 		
+		@Override
 		public void actionPerformed(ActionEvent e)
 		{
 			if (e.getSource() == buttonNorth)
@@ -823,7 +1043,7 @@ public class GameWindow extends JFrame{
 				removeDisplayLook();
 				removeItemButton();
 				addLabelComponent();
-				game.move(room, room.getRoomNorth(), window, player);
+				checkLockedRoom();
 			}
 			else if (e.getSource() == buttonEast)
 			{
@@ -839,6 +1059,7 @@ public class GameWindow extends JFrame{
 				removeItemButton();
 				addLabelComponent();
 				game.move(room, room.getRoomSouth(), window, player);
+				gainItem();
 
 			}
 			else if (e.getSource() == buttonWest)
@@ -859,6 +1080,7 @@ public class GameWindow extends JFrame{
 			{
 				removeDisplayLook();
 				game.getLookInfo(Constants.FILE, room, buttonItem1.getText(), window);
+				gainItem();
 			}
 			else if (e.getSource() == buttonItem2)
 			{
@@ -937,6 +1159,18 @@ public class GameWindow extends JFrame{
 			else if (e.getSource() == buttonHeal)
 			{
 				checkHeal();
+			}
+			else if (e.getSource() == buttonItems)
+			{
+				checkItems();
+			}
+			else if (e.getSource() == buttonItemUse)
+			{
+				useItem();
+			}
+			else if (e.getSource() == buttonItemCancel)
+			{
+				cancel();
 			}
 			else if (e.getSource() == buttonSkill1)
 			{

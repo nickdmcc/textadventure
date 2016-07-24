@@ -1,4 +1,6 @@
 
+
+
 public class Assassin extends PlayerClass{
 	private String attackMessage;
 	private String monsterAttackMessage;

@@ -1,4 +1,5 @@
 
+
 public class Fighter extends PlayerClass{
 	private String attackMessage;
 	private String monsterAttackMessage;

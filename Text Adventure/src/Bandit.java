@@ -1,4 +1,5 @@
 
+
 public class Bandit extends PlayerClass{
 	private String attackMessage;
 	private String monsterAttackMessage;

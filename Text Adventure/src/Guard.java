@@ -1,4 +1,5 @@
 
+
 public class Guard extends PlayerClass{
 	private String attackMessage;
 	private String monsterAttackMessage;
